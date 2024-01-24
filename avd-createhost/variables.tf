@@ -40,10 +40,12 @@ variable "domain_password" {
   sensitive   = true
 }
 
+// run this command on Powershell to know the types and SKU available 
+// Get-AzVmImageSku -Location 'Norway East' -PublisherName 'MicrosoftWindowsDesktop' -Offer 'Windows-11'
 variable "vm_size" {
   description = "Size of the machine to deploy"
   // default     = "Standard_DS2_v2"
-  default     = "Standard_D4_v3"
+  default     = "Standard_NV6s_v2"
 }
 
 variable "ou_path" {
