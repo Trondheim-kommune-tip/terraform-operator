@@ -4,7 +4,7 @@ data "azuread_user" "aad_user" {
 }
 
 data "azurerm_role_definition" "role" { # access an existing built-in role
-  name = "Desktop Virtualization User"
+  name = "Desktop Virtualization Contributor"
 }
 
 resource "azuread_group" "aad_group" {
