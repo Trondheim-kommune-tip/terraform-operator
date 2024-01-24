@@ -1,6 +1,6 @@
 # Customized the sample values below for your environment and either rename to terraform.tfvars or env.auto.tfvars
 
-deploy_location      = "west europe"
+deploy_location      = "norway east"
 rg_name              = "avd-resources-rg"
 prefix               = "avdtf"
 local_admin_username = "localadm"
