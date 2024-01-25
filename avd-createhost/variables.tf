@@ -12,7 +12,7 @@ variable "rg" {
 variable "rdsh_count" {
   description = "Number of AVD machines to deploy"
   //default     = 2
-  default     = 1
+  default     = 4
 }
 
 variable "prefix" {
@@ -45,7 +45,7 @@ variable "domain_password" {
 variable "vm_size" {
   description = "Size of the machine to deploy"
   // default     = "Standard_DS2_v2"
-  default     = "Standard_NV6s_v2"
+  default     = "Standard_D2as_v5"
 }
 
 variable "ou_path" {
