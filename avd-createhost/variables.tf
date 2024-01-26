@@ -45,7 +45,7 @@ variable "domain_password" {
 variable "vm_size" {
   description = "Size of the machine to deploy"
   // default     = "Standard_DS2_v2"
-  default     = "Standard_D2as_v5"
+  default     = "Standard_D4s_v5"
 }
 
 variable "ou_path" {
