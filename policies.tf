@@ -35,10 +35,10 @@ resource "spacelift_policy_attachment" "access" {
 # }
 
 # Plan policies only take effect when attached to the stack.
-resource "spacelift_policy_attachment" "plan" {
-  policy_id = spacelift_policy.plan.id
-  stack_id  = spacelift_stack.managed.id
-}
+# resource "spacelift_policy_attachment" "plan" {
+#   policy_id = spacelift_policy.plan.id
+#   stack_id  = spacelift_stack.managed.id
+# }
 
 # PUSH POLICY
 #
