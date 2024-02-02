@@ -50,18 +50,18 @@ resource "spacelift_policy_attachment" "access" {
 # You can read more about push policies here:
 #
 # https://docs.spacelift.io/concepts/policy/git-push-policy
-resource "spacelift_policy" "push" {
-  type = "GIT_PUSH"
-
-  name = "Ignore commits outside the project root"
-  body = file("${path.module}/policies/push.rego")
-}
+# resource "spacelift_policy" "push" {
+#   type = "GIT_PUSH"
+# 
+#   name = "Ignore commits outside the project root"
+#   body = file("${path.module}/policies/push.rego")
+# }
 
 # Push policies only take effect when attached to the stack.
-resource "spacelift_policy_attachment" "push" {
-  policy_id = spacelift_policy.push.id
-  stack_id  = spacelift_stack.managed.id
-}
+# resource "spacelift_policy_attachment" "push" {
+#   policy_id = spacelift_policy.push.id
+#   stack_id  = spacelift_stack.managed.id
+# }
 
 # TRIGGER POLICY
 #
