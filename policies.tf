@@ -27,12 +27,12 @@ resource "spacelift_policy_attachment" "access" {
 # You can read more about plan policies here:
 #
 # https://docs.spacelift.io/concepts/policy/terraform-plan-policy
-resource "spacelift_policy" "plan" {
-  type = "PLAN"
-
-  name = "Enforce password strength"
-  body = file("${path.module}/policies/plan.rego")
-}
+# resource "spacelift_policy" "plan" {
+#   type = "PLAN"
+# 
+#   name = "Enforce password strength"
+#   body = file("${path.module}/policies/plan.rego")
+# }
 
 # Plan policies only take effect when attached to the stack.
 resource "spacelift_policy_attachment" "plan" {
