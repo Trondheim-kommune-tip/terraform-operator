@@ -1,6 +1,6 @@
 # ACCESS POLICY
 #
-# This example access policy gives everyone in the "Engineering" GitHub team
+# This example access policy gives everyone in the "TIP-Fronetend" GitHub team
 # read access to the stack.
 #
 # You can read more about access policies here:
@@ -9,7 +9,7 @@
 resource "spacelift_policy" "access" {
   type = "ACCESS"
 
-  name = "All of Engineering gets read access"
+  name = "All of TIP-Fronetend gets read access"
   body = file("${path.module}/policies/access.rego")
 }
 
