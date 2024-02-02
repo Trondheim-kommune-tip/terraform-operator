@@ -71,18 +71,18 @@ resource "spacelift_policy_attachment" "access" {
 # You can read more about trigger policies here:
 #
 # https://docs.spacelift.io/concepts/policy/trigger-policy
-resource "spacelift_policy" "trigger" {
-  type = "TRIGGER"
-
-  name = "Trigger stacks that declare an explicit dependency"
-  body = file("${path.module}/policies/trigger.rego")
-}
+# resource "spacelift_policy" "trigger" {
+#   type = "TRIGGER"
+# 
+#   name = "Trigger stacks that declare an explicit dependency"
+#   body = file("${path.module}/policies/trigger.rego")
+# }
 
 # Trigger policies only take effect when attached to the stack.
-resource "spacelift_policy_attachment" "trigger" {
-  policy_id = spacelift_policy.trigger.id
-  stack_id  = spacelift_stack.managed.id
-}
+# resource "spacelift_policy_attachment" "trigger" {
+#   policy_id = spacelift_policy.trigger.id
+#   stack_id  = spacelift_stack.managed.id
+# }
 
 # Let's attach the policy to the current stack, so that the child stack is
 # triggered, too.
