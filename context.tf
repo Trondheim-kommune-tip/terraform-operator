@@ -4,10 +4,10 @@
 # You can read about contexts here:
 #
 # https://docs.spacelift.io/concepts/context
-resource "spacelift_context" "managed" {
-  name        = "Managed context"
-  description = "Your first context managed by Terraform"
-}
+# resource "spacelift_context" "managed" {
+#   name        = "Managed context"
+#   description = "Your first context managed by Terraform"
+# }
 
 # This is an envioronment variable defined on the context level. When the
 # context is attached to the stack, this variable will be added to the stack's
