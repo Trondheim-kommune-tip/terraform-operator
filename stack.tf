@@ -6,7 +6,7 @@ data "spacelift_github_enterprise_integration" "github_enterprise_integration" {
 resource "spacelift_stack" "managed" {
   name        = "terraform on azure"
   description = "Your first stack managed by Terraform"
-  repository   = "terraform-operator"
+  # repository   = "terraform-operator"
   branch       = "master"
   project_root = "managed-stack"
   administrative = true
