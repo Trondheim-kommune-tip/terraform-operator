@@ -12,6 +12,7 @@ resource "spacelift_stack" "managed" {
   administrative = true
   autodeploy = false
   labels     = ["managed", "depends-on:${data.spacelift_current_stack.this.id}"]
+  runner_image = "public.ecr.aws/spacelift/runner-terraform:latest"
 }
 
 resource "spacelift_stack_activator" "test" {
