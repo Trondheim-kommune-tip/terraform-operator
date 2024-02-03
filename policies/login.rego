@@ -1,13 +1,13 @@
 package spacelift
 
 # This example login policy gives everyone in the GitHub organization access to
-# Spacelift and makes all members of the GitHub "DevOps" team admins.
+# Spacelift and makes all members of the GitHub "TIP-Frontend" team admins.
 #
 # You can read more about login policies here:
 #
 # https://docs.spacelift.io/concepts/policy/login-policy
 
-admin { input.session.teams[_] == "DevOps" }
+admin { input.session.teams[_] == "TIP-Frontend" }
 allow { input.session.member }
 deny  { not allow }
 
