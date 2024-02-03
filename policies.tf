@@ -19,6 +19,11 @@ resource "spacelift_policy_attachment" "access" {
   stack_id  = spacelift_stack.managed.id
 }
 
+
+
+
+
+
 # PLAN POLICY
 #
 # This example plan policy prevents you from creating weak passwords, and warns 
@@ -39,6 +44,10 @@ resource "spacelift_policy_attachment" "access" {
 #   policy_id = spacelift_policy.plan.id
 #   stack_id  = spacelift_stack.managed.id
 # }
+
+
+
+
 
 # PUSH POLICY
 #
@@ -62,6 +71,9 @@ resource "spacelift_policy_attachment" "access" {
 #   policy_id = spacelift_policy.push.id
 #   stack_id  = spacelift_stack.managed.id
 # }
+
+
+
 
 # TRIGGER POLICY
 #
@@ -90,6 +102,11 @@ resource "spacelift_policy_attachment" "trigger" {
 #   policy_id = spacelift_policy.trigger.id
 #   stack_id  = data.spacelift_current_stack.this.id
 # }
+
+
+
+
+
 
 # LOGIN POLICY
 #
