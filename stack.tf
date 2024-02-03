@@ -1,5 +1,8 @@
 data "spacelift_current_stack" "this" {}
 
+data "spacelift_github_enterprise_integration" "github_enterprise_integration" {}
+
+
 resource "spacelift_stack" "managed" {
   name        = "terraform on azure"
   description = "Your first stack managed by Terraform"
