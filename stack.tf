@@ -4,6 +4,9 @@ data "spacelift_github_enterprise_integration" "github_enterprise_integration" {
 
 
 resource "spacelift_stack" "managed" {
+  github_enterprise {
+    namespace = "Trondheim-kommune-tip" # The GitHub organization / user the repository belongs to
+  }
   name        = "terraform on azure"
   description = "Your first stack managed by Terraform"
   repository   = "terraform-operator"
