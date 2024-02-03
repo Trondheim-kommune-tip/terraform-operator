@@ -6,7 +6,8 @@ resource "spacelift_stack" "managed" {
   repository   = "terraform-operator"
   branch       = "master"
   project_root = "managed-stack"
-  autodeploy = true
+  administrative = true
+  autodeploy = false
   labels     = ["managed", "depends-on:${data.spacelift_current_stack.this.id}"]
 }
 
