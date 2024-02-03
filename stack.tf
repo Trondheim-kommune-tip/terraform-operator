@@ -11,7 +11,6 @@ resource "spacelift_stack" "managed" {
   project_root = "managed-stack"
   administrative = true
   autodeploy = false
-  terraform_version = "1.3.0"
   labels     = ["managed", "depends-on:${data.spacelift_current_stack.this.id}"]
 }
 
