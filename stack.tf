@@ -10,6 +10,11 @@ resource "spacelift_stack" "managed" {
   labels     = ["managed", "depends-on:${data.spacelift_current_stack.this.id}"]
 }
 
+resource "spacelift_stack_activator" "test" {
+  enabled  = true
+  stack_id = spacelift_stack.managed.id
+}
+
 # This is an environment variable defined on the stack level. Stack-level
 # environment variables take precedence over those attached via contexts.
 # This evironment variable has its write_only bit explicitly set to false, which
