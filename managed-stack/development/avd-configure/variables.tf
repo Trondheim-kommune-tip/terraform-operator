@@ -12,7 +12,7 @@ description = "Name of the Resource group in which to deploy service objects"
 variable "workspace" {
 type        = string
 description = "Name of the Azure Virtual Desktop workspace"
-default     = "AVD TF Workspace"
+default     = "AVD-TF-Workspace"
 }
 
 variable "hostpool" {
