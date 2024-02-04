@@ -6,18 +6,18 @@
 # You can read more about access policies here:
 #
 # https://docs.spacelift.io/concepts/policy/stack-access-policy
-resource "spacelift_policy" "access" {
-  type = "ACCESS"
-
-  name = "All of TIP-Fronetend gets read access"
-  body = file("${path.module}/../../policies/access.rego")
-}
+#resource "spacelift_policy" "access" {
+#  type = "ACCESS"
+#
+#  name = "All of TIP-Fronetend gets read access"
+#  body = file("${path.module}/../../policies/access.rego")
+#}
 
 # Access policies only take effect when attached to the stack.
-resource "spacelift_policy_attachment" "access" {
-  policy_id = spacelift_policy.access.id
-  stack_id  = spacelift_stack.avd-rbac.id
-}
+#resource "spacelift_policy_attachment" "access" {
+#  policy_id = spacelift_policy.access.id
+#  stack_id  = spacelift_stack.avd-rbac.id
+#}
 
 
 
@@ -83,25 +83,25 @@ resource "spacelift_policy_attachment" "access" {
 # You can read more about trigger policies here:
 #
 # https://docs.spacelift.io/concepts/policy/trigger-policy
-resource "spacelift_policy" "trigger" {
-  type = "TRIGGER"
-
-  name = "Trigger stacks that declare an explicit dependency"
-  body = file("${path.module}/../../policies/trigger.rego")
-}
+#resource "spacelift_policy" "trigger" {
+#  type = "TRIGGER"
+#
+#  name = "Trigger stacks that declare an explicit dependency"
+#  body = file("${path.module}/../../policies/trigger.rego")
+#}
 
 # Trigger policies only take effect when attached to the stack.
-resource "spacelift_policy_attachment" "trigger" {
-  policy_id = spacelift_policy.trigger.id
-  stack_id  = spacelift_stack.avd-rbac.id
-}
+#resource "spacelift_policy_attachment" "trigger" {
+#  policy_id = spacelift_policy.trigger.id
+#  stack_id  = spacelift_stack.avd-rbac.id
+#}
 
 # Let's attach the policy to the current stack, so that the child stack is
 # triggered, too.
-resource "spacelift_policy_attachment" "trigger-self" {
-  policy_id = spacelift_policy.trigger.id
-  stack_id  = spacelift_stack.avd-rbac.id
-}
+#resource "spacelift_policy_attachment" "trigger-self" {
+#  policy_id = spacelift_policy.trigger.id
+#  stack_id  = spacelift_stack.avd-rbac.id
+#}
 
 
 
