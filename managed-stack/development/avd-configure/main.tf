@@ -1,3 +1,8 @@
+# rbac module
+module "avd-rbac" {
+    source = "./modules/avd-rbac"
+}
+
 # Resource group name is output when execution plan is applied.
 resource "azurerm_resource_group" "sh" {
   name     = var.rg_name
