@@ -2,7 +2,6 @@
 resource "spacelift_stack" "avd-rbac" {
   name       = "RPA rbc on azure"
   repository = "terraform-operator"
-  repository   = "terraform-operator"
   branch       = "TKCL-376-challenges-faced-in-code-avd_configure-and-avd_create-host"
   project_root = "managed-stack/development/avd-rbac"
   administrative = true
@@ -25,7 +24,7 @@ resource "spacelift_stack" "avd-configure" {
 }
 
 # Create the parent-child dependency for run execution ordering
-resource "spacelift_stack_dependency" "this" {
+resource "spacelift_stack_dependency" "configure-rbac" {
   stack_id            = spacelift_stack.avd-configure.id
   depends_on_stack_id = spacelift_stack.avd-rbac.id
 
@@ -49,7 +48,7 @@ resource "spacelift_stack" "avd-createhost" {
 }
 
 # Create the parent-child dependency for run execution ordering
-resource "spacelift_stack_dependency" "this" {
+resource "spacelift_stack_dependency" "createhost-rbac" {
   stack_id            = spacelift_stack.avd-createhost.id
   depends_on_stack_id = spacelift_stack.avd-configure.id
 
