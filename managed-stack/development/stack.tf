@@ -38,7 +38,6 @@ resource "spacelift_stack_dependency" "configure-rbac" {
 resource "spacelift_stack" "avd-createhost" {
   name       = "RPA host on azure"
   repository = "terraform-operator"
-  repository   = "terraform-operator"
   branch       = "TKCL-376-challenges-faced-in-code-avd_configure-and-avd_create-host"
   project_root = "managed-stack/development/avd-createhost"
   administrative = true
