@@ -1,8 +1,3 @@
-# configure module
-module "avd-configure" {
-    source = "./modules/avd-configure"
-}
-
 data "azuread_user" "aad_user" {
   for_each            = toset(var.avd_users)
   user_principal_name = format("%s", each.key)
