@@ -1,9 +1,9 @@
 variable "avd_users" {
   description = "AVD users"
   default = [
-    "Mikal.Rekdal@trondheim.kommune.no",
-    "sarumathy.soosaipillai@trondheim.kommune.no",
-    "Sebastian.S.Eide@trondheim.kommune.no",
+    "mikal.rekdal@avoconsulting.no",
+    "sarumathy.soosaipillai@avoconsulting.no",
+    "sebastian.s.eide@avoconsulting.no",
     "josefine.jornsen@avoconsulting.no",
     "alok.hom@trondheim.kommune.no"
   ]
