@@ -8,7 +8,7 @@ data "azurerm_role_definition" "role" { # access an existing built-in role
 }
 
 data "azurerm_role_definition" "role_session_host" { # access an existing built-in role
-  name = "	Virtual Machine Contributor"
+  name = "Virtual Machine Contributor"
 }
 
 resource "azuread_group" "aad_group" {

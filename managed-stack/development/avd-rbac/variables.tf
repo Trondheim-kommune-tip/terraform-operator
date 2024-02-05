@@ -4,6 +4,7 @@ variable "avd_users" {
     "Mikal.Rekdal@trondheim.kommune.no",
     "sarumathy.soosaipillai@trondheim.kommune.no",
     "Sebastian.S.Eide@trondheim.kommune.no",
+    "josefine.jornsen@avoconsulting.no",
     "alok.hom@trondheim.kommune.no"
   ]
 }
