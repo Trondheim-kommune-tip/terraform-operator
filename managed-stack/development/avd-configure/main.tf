@@ -33,9 +33,14 @@ resource "azurerm_virtual_desktop_host_pool" "hostpool" {
   }
 }
 
+resource "time_rotating" "avd_registration_expiration" {
+  # Must be between 1 hour and 30 days
+  rotation_days = 29
+}
+
 resource "azurerm_virtual_desktop_host_pool_registration_info" "registrationinfo" {
   hostpool_id     = azurerm_virtual_desktop_host_pool.hostpool.id
-  expiration_date = var.rfc3339
+  expiration_date = time_rotating.avd_registration_expiration.rotation_rfc3339
 }
 
 # Create AVD DAG
