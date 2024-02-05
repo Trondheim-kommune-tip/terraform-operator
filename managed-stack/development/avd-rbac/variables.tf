@@ -30,3 +30,18 @@ variable "arm_tenant_id" {
   type = string
   description = "azure AD tenant id"
 }
+
+variable "azurerm_virtual_desktop_application_group_dag_id" {
+  type = string
+  description = "azure AD azurerm_virtual_desktop_application_group_dag_id id"
+}
+
+variable "azurerm_virtual_desktop_workspace_workspace_id" {
+  type = string
+  description = "azure AD azurerm_virtual_desktop_workspace_workspace_id id"
+}
+
+variable "azure_virtual_desktop_host_pool_hostpool_id" {
+  type = string
+  description = "azure AD azure_virtual_desktop_host_pool_hostpool_id id"
+}
