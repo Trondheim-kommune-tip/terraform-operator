@@ -40,8 +40,8 @@ resource "azurerm_role_assignment" "role_hostpool" {
   principal_id       = azuread_group.aad_group.id
 }
 
-resource "azurerm_role_assignment" "role_sessionhost" {
-  scope              = azurerm_windows_virtual_machine.avd_vm.id
-  role_definition_id = data.azurerm_role_definition.role_session_host.id
-  principal_id       = azuread_group.aad_group.id
-}
+#resource "azurerm_role_assignment" "role_sessionhost" {
+#  scope              = azurerm_windows_virtual_machine.avd_vm.id
+#  role_definition_id = data.azurerm_role_definition.role_session_host.id
+#  principal_id       = azuread_group.aad_group.id
+#}
