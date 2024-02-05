@@ -23,3 +23,17 @@ output "location" {
   value       = azurerm_resource_group.sh.location
 }
 
+output "azure_virtual_desktop_host_pool_hostpool_id" {
+  description = "ID of the Azure Virtual Desktop host pool"
+  value       = azurerm_virtual_desktop_host_pool.hostpool.id
+}
+
+output "azurerm_virtual_desktop_application_group_dag_id" {
+  description = "Name of the Azure Virtual Desktop DAG id"
+  value       = azurerm_virtual_desktop_application_group.dag.id
+}
+
+output "azurerm_virtual_desktop_workspace_workspace_id" {
+  description = "id of the Azure Virtual Desktop workspace"
+  value       = azurerm_virtual_desktop_workspace.workspace.id
+}
