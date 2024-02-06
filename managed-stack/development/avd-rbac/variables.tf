@@ -1,7 +1,7 @@
 variable "avd_users" {
   description = "AVD users"
   default = [
-    "Mikal.Rekdal_avoconsulting.no#EXT#@trondheim.onmicrosoft.com"
+    "alok.hom@trondheim.kommune.no"
   ]
 }
 
