@@ -1,6 +1,6 @@
 data "azuread_user" "aad_user" {
   for_each            = toset(var.avd_users)
-  mail = format("%s", each.key)
+  object_id = format("%s", each.key)
 }
 
 data "azurerm_role_definition" "role" { # access an existing built-in role
