@@ -1,7 +1,7 @@
 data "azuread_user" "aad_user" {
   for_each            = toset(var.avd_users)
   #tenant_domain = "trondheim.onmicrosoft.com"
-  email = format("%s", each.key)
+  mail = format("%s", each.key)
   #user_principal_name = "${replace(format("%s", each.key), "@", "_")}#EXT#@${local.tenant_domain}"
   #user_principal_name = format("%s", each.key)
 }
