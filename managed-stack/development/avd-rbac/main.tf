@@ -1,3 +1,15 @@
+output "tenantid" {
+  value = "${var.arm_tenant_id}"
+}
+
+output "clientid" {
+  value = "${var.arm_client_id}"
+}
+
+output "subsid" {
+  value = "${var.arm_subscription_id}"
+}
+
 data "azuread_user" "aad_user" {
   for_each            = toset(var.avd_users)
   #tenant_domain = "trondheim.onmicrosoft.com"
