@@ -30,6 +30,11 @@ variable "arm_tenant_id" {
   description = "azure AD tenant id"
 }
 
+variable "arm_subscription_id" {
+  type = string
+  description = "azure AD subs id"
+}
+
 variable "azurerm_virtual_desktop_application_group_dag_id" {
   type = string
   description = "azure AD azurerm_virtual_desktop_application_group_dag_id id"
