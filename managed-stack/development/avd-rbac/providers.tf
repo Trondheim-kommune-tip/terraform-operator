@@ -12,12 +12,12 @@ terraform {
 
 provider "azurerm" {
   features {}
-}
-
-
-# Configure the Azure Active Directory Provider
-provider "azuread" {
   client_id     = "${var.arm_client_id}"
   client_secret = "${var.arm_client_secret}"
   tenant_id     = "${var.arm_tenant_id}"
 }
+
+
+# Configure the Azure Active Directory Provider
+#provider "azuread" {
+#}
