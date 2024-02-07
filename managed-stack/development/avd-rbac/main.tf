@@ -30,7 +30,6 @@ data "azurerm_role_definition" "role_session_host" { # access an existing built-
 data "azuread_group" "aad_group" {
   display_name     = var.aad_group_name
   security_enabled = true
-  assignable_to_role = true
 }
 
 #resource "azuread_group_member" "aad_group_member" {
