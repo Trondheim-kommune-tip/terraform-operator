@@ -15,7 +15,7 @@ data "azuread_user" "aad_user" {
   #tenant_domain = "trondheim.onmicrosoft.com"
   #mail = format("%s", each.key)
   #user_principal_name = "${replace(format("%s", each.key), "@", "_")}#EXT#@${local.tenant_domain}"
-  user_principal_name = "alok.hom@trondheim.kommune.no"
+  user_principal_name = format("%s", each.key)
 }
 
 data "azurerm_role_definition" "role" { # access an existing built-in role
