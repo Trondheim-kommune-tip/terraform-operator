@@ -116,6 +116,13 @@ resource "azurerm_storage_share" "files" {
   }
 }
 
+# get AD tenant domain name 
+# retrieves your primary Azure AD tenant domain. 
+# Terraform will use this to create user principal names for your users.
+data "azuread_domains" "avd_domain" {
+  only_initial = true
+}
+
 ######################
 # EXT-2 domain
 resource "azurerm_virtual_machine_extension" "domain_join" {

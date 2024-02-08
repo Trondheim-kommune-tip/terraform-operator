@@ -17,3 +17,7 @@ output "vnetrange" {
   description = "Address range for deployment vnet"
   value       = azurerm_virtual_network.vnet.address_space
 }
+
+output "domain_name" {
+  value = data.azuread_domains.avd_domain.domains.0.domain_name
+}
