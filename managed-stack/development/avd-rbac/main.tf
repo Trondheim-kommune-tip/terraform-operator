@@ -30,6 +30,8 @@ data "azurerm_role_definition" "role_session_host" { # access an existing built-
 data "azuread_group" "aad_group" {
   display_name = var.aad_group_name
   security_enabled = true
+  #mail_enabled = false
+  object_id = "dfd11606-0864-4376-b688-e3a577151a43"
 }
 
 #resource "azuread_group_member" "aad_group_member" {
