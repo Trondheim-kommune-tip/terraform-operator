@@ -1,5 +1,5 @@
 variable "resource_group_location" {
-  default     = "norwayeast"
+  default     = "northeurope"
   description = "Location of the resource group."
 }
 
@@ -17,7 +17,7 @@ variable "rg_shared_name" {
 
 variable "deploy_location" {
   type        = string
-  default     = "norwayeast"
+  default     = "northeurope"
   description = "The Azure Region in which all resources in this example should be created."
 }
 
