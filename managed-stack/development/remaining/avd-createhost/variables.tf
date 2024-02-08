@@ -1,5 +1,5 @@
 variable "resource_group_location" {
-  default     = "norwayeast"
+  default     = "northeurope"
   description = "Location of the resource group."
 }
 
@@ -12,7 +12,7 @@ variable "rg" {
 variable "rdsh_count" {
   description = "Number of AVD machines to deploy"
   //default     = 2
-  default     = 4
+  default     = 3
 }
 
 variable "prefix" {
