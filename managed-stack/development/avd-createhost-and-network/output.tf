@@ -21,3 +21,4 @@ output "vnetrange" {
 output "domain_name" {
   value = data.azuread_domains.avd_domain.domains.0.domain_name
 }
+
