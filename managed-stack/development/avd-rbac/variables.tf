@@ -9,7 +9,7 @@ variable "avd_users" {
 variable "aad_group_name" {
   type        = string
   default     = "Terraform-RPA"
-  description = "Azure Active Directory Group for AVD users"
+  description = "Tilgangsgruppe RPA-servere intern/ekstern, ALOK"
 }
 
 variable "arm_client_id" {
