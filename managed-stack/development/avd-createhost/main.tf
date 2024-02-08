@@ -124,7 +124,7 @@ data "azuread_domains" "avd_domain" {
 }
 
 ######################
-# EXT-2 domain
+# EXT-2 domain join ( see output)
 resource "azurerm_virtual_machine_extension" "domain_join" {
   count                      = var.rdsh_count
   name                       = "${var.prefix}-${count.index + 1}-domainJoin"
