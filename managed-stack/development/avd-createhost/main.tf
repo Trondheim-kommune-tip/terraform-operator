@@ -1,5 +1,12 @@
 locals {
   registration_token = azurerm_virtual_desktop_host_pool_registration_info.registrationinfo.token
+  connect_file_share_script = templatefile("${path.module}/connect-azure-file-share.tpl.ps1", {
+    storage_account_file_host = azurerm_storage_account.storage_account.primary_file_host
+    storage_account_name      = azurerm_storage_account.storage_account.name
+    storage_account_key       = azurerm_storage_account.storage_account.primary_access_key
+    file_share_name           = azurerm_storage_share.files.name
+    drive_letter              = "Z"
+  })
 }
 
 resource "random_string" "AVD_local_password" {
@@ -15,6 +22,8 @@ resource "azurerm_resource_group" "rg" {
   location = var.resource_group_location
 }
 
+
+# NIC
 resource "azurerm_network_interface" "avd_vm_nic" {
   count               = var.rdsh_count
   name                = "${var.prefix}-${count.index + 1}-nic"
@@ -32,6 +41,8 @@ resource "azurerm_network_interface" "avd_vm_nic" {
   ]
 }
 
+
+# VMs
 resource "azurerm_windows_virtual_machine" "avd_vm" {
   count                 = var.rdsh_count
   name                  = "${var.prefix}-${count.index + 1}"
@@ -62,6 +73,51 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
   ]
 }
 
+
+###################################
+# EXT-1 shared files system
+resource "azurerm_virtual_machine_extension" "attach_file_share" {
+  name                 = "attach_file_share"
+  virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm.id
+  publisher            = "Microsoft.Compute"
+  type                 = "CustomScriptExtension"
+  type_handler_version = "1.10"
+
+  settings = jsonencode({
+    commandToExecute = "powershell -EncodedCommand ${encodetextbase64(local.connect_file_share_script, "UTF-16")}"
+  })
+}
+
+resource "azurerm_storage_account" "storage_account" {
+  name                     = "avdsharedstorage"
+  resource_group_name      = azurerm_resource_group.rg.name
+  location                 = "northeurope"
+  account_kind             = "StorageV2"
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+  access_tier              = "Cool"
+  enable_https_traffic_only = true
+}
+
+resource "azurerm_storage_share" "files" {
+  name                 = "files"
+  storage_account_name = azurerm_storage_account.storage_account.name
+  # 200 GB shared drive
+  quota                = 200
+
+  acl {
+    id = "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI"
+
+    access_policy {
+      permissions = "rwdl"
+      start       = "2019-07-02T09:38:21.0000000Z"
+      expiry      = "2019-07-02T10:38:21.0000000Z"
+    }
+  }
+}
+
+######################
+# EXT-2 domain
 resource "azurerm_virtual_machine_extension" "domain_join" {
   count                      = var.rdsh_count
   name                       = "${var.prefix}-${count.index + 1}-domainJoin"
@@ -97,6 +153,8 @@ PROTECTED_SETTINGS
   ]
 }
 
+######################
+# EXT-2 vm ext Number of AVD machines to deploy
 resource "azurerm_virtual_machine_extension" "vmext_dsc" {
   count                      = var.rdsh_count
   name                       = "${var.prefix}${count.index + 1}-avd_dsc"
@@ -129,3 +187,5 @@ PROTECTED_SETTINGS
     azurerm_virtual_desktop_host_pool.hostpool
   ]
 }
+
+
