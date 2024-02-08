@@ -47,3 +47,9 @@ variable "azure_virtual_desktop_host_pool_hostpool_id" {
   type = string
   description = "azure AD azure_virtual_desktop_host_pool_hostpool_id id"
 }
+
+variable "aad_group_name" {
+  type        = string
+  default     = "Terraform-RPA"
+  description = "Azure Active Directory Group for AVD users"
+}
