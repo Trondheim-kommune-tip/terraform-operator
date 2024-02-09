@@ -230,6 +230,28 @@ resource "azurerm_network_security_group" "nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+  security_rule {
+    name                       = "appserver2dbnclients"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = ["1433-1434","8181","10000","1001-1002"]
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+  security_rule {
+    name                       = "clients2appserver"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = ["8196-8198","10000-1002","135","49152","65535"]
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
   depends_on = [azurerm_resource_group.rg]
 }
 
