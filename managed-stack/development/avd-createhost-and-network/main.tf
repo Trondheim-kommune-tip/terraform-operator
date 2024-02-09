@@ -172,6 +172,14 @@ resource "azurerm_virtual_machine_extension" "vmext_dsc" {
   type_handler_version       = "2.73"
   auto_upgrade_minor_version = true
 
+  lifecycle {
+    replace_triggered_by = [
+      # Replace `azurerm_virtual_machine_extension` each time this id of
+      # the `azure_virtual_desktop_host_pool_hostpool_id` is impacted.
+      azure_virtual_desktop_host_pool_hostpool_id
+    ]
+  }
+
   settings = <<-SETTINGS
     {
       "modulesUrl": "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_09-08-2022.zip",
@@ -191,8 +199,7 @@ SETTINGS
 PROTECTED_SETTINGS
 
   depends_on = [
-    azurerm_virtual_machine_extension.domain_join,
-    azurerm_virtual_desktop_host_pool.hostpool
+    azurerm_virtual_machine_extension.domain_join
   ]
 }
 
