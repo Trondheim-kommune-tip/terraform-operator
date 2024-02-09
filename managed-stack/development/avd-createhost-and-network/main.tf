@@ -174,7 +174,7 @@ resource "azurerm_virtual_machine_extension" "vmext_dsc" {
 
   lifecycle {
     precondition {
-      condition     = azure_virtual_desktop_host_pool_hostpool_id != ""
+      condition     = var.azure_virtual_desktop_host_pool_hostpool_id != ""
       error_message = "azure_virtual_desktop_host_pool_hostpool_id is empty and needs to be created"
     }
   }
