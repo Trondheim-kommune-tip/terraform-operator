@@ -237,7 +237,7 @@ resource "azurerm_network_security_group" "nsg" {
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = ["1433-1434","8181","10000","1001-1002"]
+    destination_port_ranges     = ["1433-1434","8181","10000","1001-1002"]
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -248,7 +248,7 @@ resource "azurerm_network_security_group" "nsg" {
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = ["8196-8198","10000-1002","135","49152","65535"]
+    destination_port_ranges     = ["8196-8198","10000-1002","135","49152","65535"]
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }

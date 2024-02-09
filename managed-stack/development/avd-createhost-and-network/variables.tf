@@ -21,11 +21,11 @@ variable "prefix" {
   description = "Prefix of the name of the AVD machine(s)"
 }
 
-#variable "domain_name" {
-#  type        = string
-#  default     = "infra.local"
-#  description = "Name of the domain to join"
-#}
+variable "domain_name" {
+  type        = string
+  default     = "infra.local"
+  description = "Name of the domain to join"
+}
 
 variable "domain_user_upn" {
   type        = string
