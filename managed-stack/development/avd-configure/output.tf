@@ -41,4 +41,5 @@ output "azurerm_virtual_desktop_workspace_workspace_id" {
 output "azurerm_virtual_desktop_host_pool_registration_info_registrationinfo_token" {
   description = "token for hostpool reg info"
   value       = azurerm_virtual_desktop_host_pool_registration_info.registrationinfo.token
+  sensitive   = true
 }
