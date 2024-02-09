@@ -40,6 +40,12 @@ variable "domain_password" {
   sensitive   = true
 }
 
+variable "azure_virtual_desktop_host_pool_name" {
+  type        = string
+  default     = "poolname"
+  description = "VD hostpool name"
+}
+
 // run this command on Powershell to know the types and SKU available 
 // Get-AzVmImageSku -Location 'Norway East' -PublisherName 'MicrosoftWindowsDesktop' -Offer 'Windows-11'
 variable "vm_size" {
