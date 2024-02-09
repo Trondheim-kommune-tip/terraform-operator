@@ -1,12 +1,5 @@
 locals {
   registration_token = var.azurerm_virtual_desktop_host_pool_registration_info_registrationinfo_token
-  connect_file_share_script = templatefile("${path.module}/connect-azure-file-share.tpl.ps1", {
-    storage_account_file_host = azurerm_storage_account.storage_account.primary_file_host
-    storage_account_name      = azurerm_storage_account.storage_account.name
-    storage_account_key       = azurerm_storage_account.storage_account.primary_access_key
-    file_share_name           = azurerm_storage_share.files.name
-    drive_letter              = "Z"
-  })
 }
 
 resource "random_string" "AVD_local_password" {
@@ -80,13 +73,20 @@ resource "azurerm_virtual_machine_extension" "attach_file_share" {
   count                = var.rdsh_count
   name                 = "attach_file_share"
   virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm[count.index]
-  publisher            = "Microsoft.Compute"
-  type                 = "CustomScriptExtension"
-  type_handler_version = "1.10"
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.0"
 
-  settings = jsonencode({
-    commandToExecute = "powershell -EncodedCommand ${encodetextbase64(local.connect_file_share_script, "UTF-16")}"
-  })
+  settings = <<SETTINGS
+  {
+  "commandToExecute": "hostname && uptime"
+  }
+  SETTINGS
+
+
+  tags = {
+    environment = "Production"
+  }
 }
 
 resource "azurerm_storage_account" "storage_account" {
