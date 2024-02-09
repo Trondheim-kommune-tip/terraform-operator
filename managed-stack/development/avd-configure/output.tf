@@ -37,3 +37,8 @@ output "azurerm_virtual_desktop_workspace_workspace_id" {
   description = "id of the Azure Virtual Desktop workspace"
   value       = azurerm_virtual_desktop_workspace.workspace.id
 }
+
+output "azurerm_virtual_desktop_host_pool_registration_info_registrationinfo_token" {
+  description = "token for hostpool reg info"
+  value       = azurerm_virtual_desktop_host_pool_registration_info.registrationinfo.token
+}
