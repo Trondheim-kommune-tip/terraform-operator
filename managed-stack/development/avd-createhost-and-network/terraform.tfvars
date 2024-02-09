@@ -14,12 +14,12 @@ domain_user_upn      = "testcifs"     # do not include domain name as this is ap
 domain_password      = "tk2006"
 ad_vnet              = "infra-network"
 ad_rg                = "infra-rg"
-avd_users = [
-  "Mikal.Rekdal@trondheim.kommune.no",
-  "sarumathy.soosaipillai@trondheim.kommune.no",
-  "Sebastian.S.Eide@trondheim.kommune.no",
-  "alok.hom@trondheim.kommune.no",
-  "robot.roger.robot.roger@trondheim.kommune.no",
-  "caroline.skram.by@trondheim.kommune.no",
-  "kitti.lai@trondheim.kommune.no"
-]
+#avd_users = [
+#  "Mikal.Rekdal@trondheim.kommune.no",
+#  "sarumathy.soosaipillai@trondheim.kommune.no",
+#  "Sebastian.S.Eide@trondheim.kommune.no",
+#  "alok.hom@trondheim.kommune.no",
+#  "robot.roger.robot.roger@trondheim.kommune.no",
+#  "caroline.skram.by@trondheim.kommune.no",
+#  "kitti.lai@trondheim.kommune.no"
+#]
