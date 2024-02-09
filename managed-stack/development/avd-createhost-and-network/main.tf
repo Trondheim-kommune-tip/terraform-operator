@@ -176,7 +176,7 @@ resource "azurerm_virtual_machine_extension" "vmext_dsc" {
     replace_triggered_by = [
       # Replace `azurerm_virtual_machine_extension` each time this id of
       # the `azure_virtual_desktop_host_pool_hostpool_id` is impacted.
-      azure_virtual_desktop_host_pool_hostpool_id
+      var.azure_virtual_desktop_host_pool_hostpool_id
     ]
   }
 
