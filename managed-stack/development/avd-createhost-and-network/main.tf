@@ -184,7 +184,7 @@ resource "azurerm_virtual_machine_extension" "vmext_dsc" {
       "modulesUrl": "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_09-08-2022.zip",
       "configurationFunction": "Configuration.ps1\\AddSessionHost",
       "properties": {
-        "HostPoolName":"${azure_virtual_desktop_host_pool_name}"
+        "HostPoolName": var.azure_virtual_desktop_host_pool_name
       }
     }
 SETTINGS
