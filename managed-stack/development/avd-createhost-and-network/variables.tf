@@ -89,7 +89,6 @@ variable "ad_vnet" {
   description = "Name of domain controller vnet"
 }
 
-
 variable "ad_rg" {
   type        = string
   default     = "infra-rg"
