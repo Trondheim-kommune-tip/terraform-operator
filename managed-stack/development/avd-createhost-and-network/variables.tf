@@ -89,6 +89,13 @@ variable "ad_vnet" {
   description = "Name of domain controller vnet"
 }
 
+
+variable "ad_rg" {
+  type        = string
+  default     = "infra-rg"
+  description = "Name of domain controller rg"
+}
+
 variable "dns_servers" {
   type        = list(string)
   default     = ["10.0.1.4", "168.63.129.16"]

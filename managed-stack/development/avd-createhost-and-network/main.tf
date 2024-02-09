@@ -81,7 +81,7 @@ resource "azurerm_virtual_machine_extension" "attach_file_share" {
   {
   "commandToExecute": "hostname"
   }
-  SETTINGS
+SETTINGS
 
 
   tags = {
