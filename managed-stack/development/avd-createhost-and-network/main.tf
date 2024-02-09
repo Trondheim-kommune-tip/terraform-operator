@@ -173,11 +173,10 @@ resource "azurerm_virtual_machine_extension" "vmext_dsc" {
   auto_upgrade_minor_version = true
 
   lifecycle {
-    replace_triggered_by = [
-      # Replace `azurerm_virtual_machine_extension` each time this id of
-      # the `azure_virtual_desktop_host_pool_hostpool_id` is impacted.
-      var.azure_virtual_desktop_host_pool_hostpool_id
-    ]
+    precondition {
+      condition     = azure_virtual_desktop_host_pool_hostpool_id != ""
+      error_message = "azure_virtual_desktop_host_pool_hostpool_id is empty and needs to be created"
+    }
   }
 
   settings = <<-SETTINGS
