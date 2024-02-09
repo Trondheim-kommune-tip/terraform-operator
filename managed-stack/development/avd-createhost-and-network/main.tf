@@ -77,6 +77,7 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
 ###################################
 # EXT-1 shared files system
 resource "azurerm_virtual_machine_extension" "attach_file_share" {
+  count                = var.rdsh_count
   name                 = "attach_file_share"
   virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm[count.index]
   publisher            = "Microsoft.Compute"
