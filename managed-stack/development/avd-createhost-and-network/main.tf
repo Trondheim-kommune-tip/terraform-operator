@@ -179,7 +179,7 @@ resource "azurerm_virtual_machine_extension" "vmext_dsc" {
     }
   }
 
-  settings = <<-SETTINGS
+  settings = <<SETTINGS
     {
       "modulesUrl": "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_09-08-2022.zip",
       "configurationFunction": "Configuration.ps1\\AddSessionHost",
