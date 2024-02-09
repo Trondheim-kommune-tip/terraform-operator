@@ -79,7 +79,7 @@ resource "azurerm_virtual_machine_extension" "attach_file_share" {
 
   settings = <<SETTINGS
   {
-  "commandToExecute": "hostname && uptime"
+  "commandToExecute": "hostname"
   }
   SETTINGS
 
