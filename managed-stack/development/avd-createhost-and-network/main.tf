@@ -1,5 +1,5 @@
 locals {
-  registration_token = azurerm_virtual_desktop_host_pool_registration_info.registrationinfo.token
+  registration_token = var.azurerm_virtual_desktop_host_pool_registration_info_registrationinfo_token
   connect_file_share_script = templatefile("${path.module}/connect-azure-file-share.tpl.ps1", {
     storage_account_file_host = azurerm_storage_account.storage_account.primary_file_host
     storage_account_name      = azurerm_storage_account.storage_account.name

@@ -105,3 +105,9 @@ variable "subnet_range" {
   default     = ["10.2.0.0/24"]
   description = "Address range for session host subnet"
 }
+
+variable "azurerm_virtual_desktop_host_pool_registration_info_registrationinfo_token" {
+  type        = string
+  default     = "reg_info_token"
+  description = "value of host pool reg info token"
+}
