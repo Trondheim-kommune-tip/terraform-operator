@@ -41,7 +41,7 @@ resource "azurerm_network_interface" "avd_vm_nic" {
   ]
 }
 
-
+######### virtual machine
 # VMs
 resource "azurerm_windows_virtual_machine" "avd_vm" {
   count                 = var.rdsh_count
@@ -78,7 +78,7 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
 # EXT-1 shared files system
 resource "azurerm_virtual_machine_extension" "attach_file_share" {
   name                 = "attach_file_share"
-  virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm.id
+  virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm[count.index]
   publisher            = "Microsoft.Compute"
   type                 = "CustomScriptExtension"
   type_handler_version = "1.10"
