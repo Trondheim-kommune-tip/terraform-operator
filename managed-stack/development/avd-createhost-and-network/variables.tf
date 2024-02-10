@@ -124,13 +124,8 @@ variable "azurerm_virtual_desktop_host_pool_registration_info_registrationinfo_t
   description = "value of host pool reg info token"
 }
 
-variable "azure_virtual_desktop_host_pool_hostpool_id" {
-  type        = string
-  default     = "id"
-  description = "value of host pool id"
-}
 
-
+####################
 # RBAC
 variable "arm_client_id" {
   type = string
