@@ -10,202 +10,17 @@ resource "random_string" "AVD_local_password" {
   override_special = "*!@#?"
 }
 
+# RG for session host
 resource "azurerm_resource_group" "rg" {
   name     = var.rg
   location = var.resource_group_location
 }
 
 
-# NIC
-resource "azurerm_network_interface" "avd_vm_nic" {
-  count               = var.rdsh_count
-  name                = "${var.prefix}-${count.index + 1}-nic"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
 
-  ip_configuration {
-    name                          = "nic${count.index + 1}_config"
-    subnet_id                     = azurerm_subnet.subnet.id
-    private_ip_address_allocation = "dynamic"
-  }
-
-  depends_on = [
-    azurerm_resource_group.rg
-  ]
-}
-
-######### virtual machine
-# VMs
-resource "azurerm_windows_virtual_machine" "avd_vm" {
-  count                 = var.rdsh_count
-  name                  = "${var.prefix}-${count.index + 1}"
-  resource_group_name   = azurerm_resource_group.rg.name
-  location              = azurerm_resource_group.rg.location
-  size                  = var.vm_size
-  network_interface_ids = ["${azurerm_network_interface.avd_vm_nic.*.id[count.index]}"]
-  provision_vm_agent    = true
-  admin_username        = var.local_admin_username
-  admin_password        = var.local_admin_password
-
-  os_disk {
-    name                 = "${lower(var.prefix)}-${count.index + 1}"
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
-
-  source_image_reference {
-    publisher = "MicrosoftWindowsDesktop"
-    offer     = "Windows-11"
-    sku       = "win11-22h2-avd"
-    version   = "latest"
-  }
-
-  depends_on = [
-    azurerm_resource_group.rg,
-    azurerm_network_interface.avd_vm_nic
-  ]
-}
-
-
-###################################
-# EXT-1 shared files system
-resource "azurerm_virtual_machine_extension" "attach_file_share" {
-  for_each = azurerm_windows_virtual_machine.avd_vm
-  #count                = var.rdsh_count
-  name                 = "attach_file_share"
-  virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm[each.value.id]
-  publisher            = "Microsoft.Azure.Extensions"
-  type                 = "CustomScript"
-  type_handler_version = "2.0"
-
-  settings = <<SETTINGS
-  {
-  "commandToExecute": "hostname"
-  }
-SETTINGS
-
-
-  tags = {
-    environment = "Production"
-  }
-}
-
-resource "azurerm_storage_account" "storage_account" {
-  name                     = "avdsharedstorage"
-  resource_group_name      = azurerm_resource_group.rg.name
-  location                 = "northeurope"
-  account_kind             = "StorageV2"
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-  access_tier              = "Cool"
-  enable_https_traffic_only = true
-}
-
-resource "azurerm_storage_share" "files" {
-  name                 = "files"
-  storage_account_name = azurerm_storage_account.storage_account.name
-  # 200 GB shared drive
-  quota                = 200
-
-  acl {
-    id = "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI"
-
-    access_policy {
-      permissions = "rwdl"
-      start       = "2024-10-10T09:38:21.0000000Z"
-      expiry      = "2026-10-10T10:38:21.0000000Z"
-    }
-  }
-}
-
-# get AD tenant domain name 
-# retrieves your primary Azure AD tenant domain. 
-# Terraform will use this to create user principal names for your users.
-data "azuread_domains" "avd_domain" {
-  only_initial = true
-}
-
-######################
-# EXT-2 domain join ( see output)
-resource "azurerm_virtual_machine_extension" "domain_join" {
-  count                      = var.rdsh_count
-  name                       = "${var.prefix}-${count.index + 1}-domainJoin"
-  virtual_machine_id         = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
-  publisher                  = "Microsoft.Compute"
-  type                       = "JsonADDomainExtension"
-  type_handler_version       = "1.3"
-  auto_upgrade_minor_version = true
-
-  settings = <<SETTINGS
-    {
-      "Name": "${var.domain_name}",
-      "OUPath": "${var.ou_path}",
-      "User": "${var.domain_user_upn}@${var.domain_name}",
-      "Restart": "true",
-      "Options": "3"
-    }
-SETTINGS
-
-  protected_settings = <<PROTECTED_SETTINGS
-    {
-      "Password": "${var.domain_password}"
-    }
-PROTECTED_SETTINGS
-
-  lifecycle {
-    ignore_changes = [settings, protected_settings]
-  }
-
-  depends_on = [
-    azurerm_virtual_network_peering.peer1,
-    azurerm_virtual_network_peering.peer2,
-    "azurerm_virtual_machine_extension.attach_file_share"
-  ]
-}
-
-######################
-# EXT-2 vm ext Number of AVD machines to deploy
-resource "azurerm_virtual_machine_extension" "vmext_dsc" {
-  count                      = var.rdsh_count
-  name                       = "${var.prefix}${count.index + 1}-avd_dsc"
-  virtual_machine_id         = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
-  publisher                  = "Microsoft.Powershell"
-  type                       = "DSC"
-  type_handler_version       = "2.73"
-  auto_upgrade_minor_version = true
-
-  lifecycle {
-    precondition {
-      condition     = var.azure_virtual_desktop_host_pool_hostpool_id != ""
-      error_message = "azure_virtual_desktop_host_pool_hostpool_id is empty and needs to be created"
-    }
-  }
-
-  settings = <<SETTINGS
-    {
-      "modulesUrl": "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_09-08-2022.zip",
-      "configurationFunction": "Configuration.ps1\\AddSessionHost",
-      "properties": {
-        "HostPoolName":"${var.azure_virtual_desktop_host_pool_name}"
-      }
-    }
-SETTINGS
-
-  protected_settings = <<PROTECTED_SETTINGS
-  {
-    "properties": {
-      "registrationInfoToken": "${local.registration_token}"
-    }
-  }
-PROTECTED_SETTINGS
-
-  depends_on = [
-    azurerm_virtual_machine_extension.domain_join
-  ]
-}
-
-############################
-#### network
+#############################################
+#### avd network settings and security groups
+############################################# 
 resource "azurerm_virtual_network" "vnet" {
   name                = "${var.prefix}-VNet"
   address_space       = var.vnet_range
@@ -279,9 +94,203 @@ resource "azurerm_virtual_network_peering" "peer1" {
   virtual_network_name      = azurerm_virtual_network.vnet.name
   remote_virtual_network_id = data.azurerm_virtual_network.ad_vnet_data.id
 }
+
 resource "azurerm_virtual_network_peering" "peer2" {
   name                      = "peer_ad_avdspoke"
   resource_group_name       = var.ad_rg
   virtual_network_name      = var.ad_vnet
   remote_virtual_network_id = azurerm_virtual_network.vnet.id
 }
+
+
+# NIC for VMs
+resource "azurerm_network_interface" "avd_vm_nic" {
+  count               = var.rdsh_count
+  name                = "${var.prefix}-${count.index + 1}-nic"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+
+  ip_configuration {
+    name                          = "nic${count.index + 1}_config"
+    subnet_id                     = azurerm_subnet.subnet.id
+    private_ip_address_allocation = "dynamic"
+  }
+
+  depends_on = [
+    azurerm_resource_group.rg
+  ]
+}
+
+#virtual machine
+# VMs
+resource "azurerm_windows_virtual_machine" "avd_vm" {
+  count                 = var.rdsh_count
+  name                  = "${var.prefix}-${count.index + 1}"
+  resource_group_name   = azurerm_resource_group.rg.name
+  location              = azurerm_resource_group.rg.location
+  size                  = var.vm_size
+  network_interface_ids = ["${azurerm_network_interface.avd_vm_nic.*.id[count.index]}"]
+  provision_vm_agent    = true
+  admin_username        = var.local_admin_username
+  admin_password        = var.local_admin_password
+
+  os_disk {
+    name                 = "${lower(var.prefix)}-${count.index + 1}"
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+    disk_size_gb         = "100"
+  }
+
+  source_image_reference {
+    publisher = "MicrosoftWindowsDesktop"
+    offer     = "Windows-11"
+    sku       = "win11-22h2-avd"
+    version   = "latest"
+  }
+
+  depends_on = [
+    azurerm_resource_group.rg,
+    azurerm_network_interface.avd_vm_nic
+  ]
+}
+
+
+###################################
+# shared file shared
+resource "azurerm_storage_account" "storage_account" {
+  name                     = "avdsharedstorage"
+  resource_group_name      = azurerm_resource_group.rg.name
+  location                 = "northeurope"
+  account_kind             = "StorageV2"
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+  access_tier              = "Cool"
+  enable_https_traffic_only = true
+}
+
+resource "azurerm_storage_share" "files" {
+  name                 = "files"
+  storage_account_name = azurerm_storage_account.storage_account.name
+  # 200 GB shared drive
+  quota                = 200
+
+  acl {
+    id = "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI"
+
+    access_policy {
+      permissions = "rwdl"
+      start       = "2024-10-10T09:38:21.0000000Z"
+      expiry      = "2026-10-10T10:38:21.0000000Z"
+    }
+  }
+}
+
+# EXT-1 shared files system
+resource "azurerm_virtual_machine_extension" "attach_file_share" {
+  for_each = azurerm_windows_virtual_machine.avd_vm
+  #count                = var.rdsh_count
+  name                 = "attach_file_share"
+  virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm[each.value.id]
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.0"
+
+  settings = <<SETTINGS
+  {
+  "commandToExecute": "hostname"
+  }
+SETTINGS
+
+
+  tags = {
+    environment = "Production"
+  }
+}
+
+#############################
+# get AD tenant domain name 
+# retrieves your primary Azure AD tenant domain. 
+# Terraform will use this to create user principal names for your users.
+data "azuread_domains" "avd_domain" {
+  only_initial = true
+}
+
+######################
+# EXT-2 domain join ( see output)
+resource "azurerm_virtual_machine_extension" "domain_join" {
+  count                      = var.rdsh_count
+  name                       = "${var.prefix}-${count.index + 1}-domainJoin"
+  virtual_machine_id         = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
+  publisher                  = "Microsoft.Compute"
+  type                       = "JsonADDomainExtension"
+  type_handler_version       = "1.3"
+  auto_upgrade_minor_version = true
+
+  settings = <<SETTINGS
+    {
+      "Name": "${var.domain_name}",
+      "OUPath": "${var.ou_path}",
+      "User": "${var.domain_user_upn}@${var.domain_name}",
+      "Restart": "true",
+      "Options": "3"
+    }
+SETTINGS
+
+  protected_settings = <<PROTECTED_SETTINGS
+    {
+      "Password": "${var.domain_password}"
+    }
+PROTECTED_SETTINGS
+
+  lifecycle {
+    ignore_changes = [settings, protected_settings]
+  }
+
+  depends_on = [
+    azurerm_virtual_network_peering.peer1,
+    azurerm_virtual_network_peering.peer2,
+    azurerm_virtual_machine_extension.attach_file_share
+  ]
+}
+
+######################
+# EXT-2 vm ext Number of AVD machines to deploy
+resource "azurerm_virtual_machine_extension" "vmext_dsc" {
+  count                      = var.rdsh_count
+  name                       = "${var.prefix}${count.index + 1}-avd_dsc"
+  virtual_machine_id         = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
+  publisher                  = "Microsoft.Powershell"
+  type                       = "DSC"
+  type_handler_version       = "2.73"
+  auto_upgrade_minor_version = true
+
+  lifecycle {
+    precondition {
+      condition     = var.azure_virtual_desktop_host_pool_hostpool_id != ""
+      error_message = "azure_virtual_desktop_host_pool_hostpool_id is empty and needs to be created"
+    }
+  }
+
+  settings = <<SETTINGS
+    {
+      "modulesUrl": "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_09-08-2022.zip",
+      "configurationFunction": "Configuration.ps1\\AddSessionHost",
+      "properties": {
+        "HostPoolName":"${var.azure_virtual_desktop_host_pool_name}"
+      }
+    }
+SETTINGS
+
+  protected_settings = <<PROTECTED_SETTINGS
+  {
+    "properties": {
+      "registrationInfoToken": "${local.registration_token}"
+    }
+  }
+PROTECTED_SETTINGS
+
+  depends_on = [
+    azurerm_virtual_machine_extension.domain_join
+  ]
+}
+
