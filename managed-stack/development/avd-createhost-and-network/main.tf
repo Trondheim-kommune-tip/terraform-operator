@@ -1,32 +1,20 @@
-locals {
-  registration_token = var.azurerm_virtual_desktop_host_pool_registration_info_registrationinfo_token
-}
-
-resource "random_string" "AVD_local_password" {
-  count            = var.rdsh_count
-  length           = 16
-  special          = true
-  min_special      = 2
-  override_special = "*!@#?"
-}
-
-# RG for session host
-resource "azurerm_resource_group" "rg" {
-  name     = var.rg
-  location = var.resource_group_location
-}
-
-
-
 #############################################
 #### avd network settings and security groups
+# Use Terraform to create a virtual network
+# Use Terraform to create a subnet
+# Use Terraform to create an NSG
+# Peering the Azure Virtual Desktop vnet with hub vnet
 ############################################# 
+
+########################
+### avd desktop vnet 
+########################
 resource "azurerm_virtual_network" "vnet" {
   name                = "${var.prefix}-VNet"
   address_space       = var.vnet_range
   dns_servers         = var.dns_servers
   location            = var.deploy_location
-  resource_group_name = var.rg_name
+  resource_group_name = var.rg_name                     #### avd-resources-rg 
   depends_on          = [azurerm_resource_group.rg]
 }
 
@@ -83,11 +71,15 @@ resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
+#######################
+## hub vnet 
+################
 data "azurerm_virtual_network" "ad_vnet_data" {
   name                = var.ad_vnet
   resource_group_name = var.ad_rg
 }
 
+# Peering the Azure Virtual Desktop vnet with hub vnet
 resource "azurerm_virtual_network_peering" "peer1" {
   name                      = "peer_avdspoke_ad"
   resource_group_name       = var.rg_name
@@ -103,7 +95,32 @@ resource "azurerm_virtual_network_peering" "peer2" {
 }
 
 
+#######################
 # NIC for VMs
+# Use Terraform to create NIC for each session host
+# Use Terraform to create VM for session host
+# Join VM to domain
+# Register VM with Azure Virtual Desktop
+# Use variables file
+###############
+locals {
+  registration_token = var.azurerm_virtual_desktop_host_pool_registration_info_registrationinfo_token
+}
+
+resource "random_string" "AVD_local_password" {
+  count            = var.rdsh_count
+  length           = 16
+  special          = true
+  min_special      = 2
+  override_special = "*!@#?"
+}
+
+# RG for session host is rg-avd-compute
+resource "azurerm_resource_group" "rg" {
+  name     = var.rg                                # rg-avd-compute
+  location = var.resource_group_location
+}
+
 resource "azurerm_network_interface" "avd_vm_nic" {
   count               = var.rdsh_count
   name                = "${var.prefix}-${count.index + 1}-nic"
@@ -294,3 +311,44 @@ PROTECTED_SETTINGS
   ]
 }
 
+#########
+# RBac 
+#########
+data "azurerm_role_definition" "role" { # access an existing built-in role
+  name = "Desktop Virtualization Contributor"
+}
+
+data "azurerm_role_definition" "role_session_host" { # access an existing built-in role
+  name = "Virtual Machine Contributor"
+}
+
+# resource "azuread_group" "aad_group" was earlier
+data "azuread_group" "aad_group" {
+  display_name     = var.aad_group_name
+  security_enabled = true
+}
+
+resource "azurerm_role_assignment" "role_dag" {
+  scope              = "${var.azurerm_virtual_desktop_application_group_dag_id}"
+  role_definition_id = data.azurerm_role_definition.role.id
+  principal_id       = data.azuread_group.aad_group.object_id
+}
+
+resource "azurerm_role_assignment" "role_workspace" {
+  scope              = "${var.azurerm_virtual_desktop_workspace_workspace_id}"
+  role_definition_id = data.azurerm_role_definition.role.id
+  principal_id       = data.azuread_group.aad_group.object_id
+}
+
+resource "azurerm_role_assignment" "role_hostpool" {
+  scope              = "${var.azure_virtual_desktop_host_pool_hostpool_id}"
+  role_definition_id = data.azurerm_role_definition.role.id
+  principal_id       = data.azuread_group.aad_group.object_id
+}
+
+resource "azurerm_role_assignment" "role_sessionhost" {
+  count              = var.rdsh_count
+  scope              = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
+  role_definition_id = data.azurerm_role_definition.role_session_host.id
+  principal_id       = data.azuread_group.aad_group.object_id
+}

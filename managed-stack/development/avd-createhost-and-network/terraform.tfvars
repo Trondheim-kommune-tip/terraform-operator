@@ -1,5 +1,6 @@
 # Customized the sample values below for your environment and either rename to terraform.tfvars or env.auto.tfvars
 
+### desktop 
 deploy_location      = "northeurope"
 rg_name              = "avd-resources-rg"
 prefix               = "avdtf"
@@ -12,6 +13,9 @@ dns_servers          = ["10.0.1.4", "168.63.129.16"]
 domain_name          = "tka.local"
 domain_user_upn      = "testcifs"     # do not include domain name as this is appended
 domain_password      = "tk2006"
+
+
+# hub network 
 ad_vnet              = "infra-network"
 ad_rg                = "infra-rg"
 #avd_users = [
