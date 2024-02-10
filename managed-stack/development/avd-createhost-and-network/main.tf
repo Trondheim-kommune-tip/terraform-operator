@@ -73,7 +73,7 @@ resource "azurerm_virtual_machine_extension" "attach_file_share" {
   for_each = azurerm_windows_virtual_machine.avd_vm
   #count                = var.rdsh_count
   name                 = "attach_file_share"
-  virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm.id
+  virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm[each.value.id]
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
   type_handler_version = "2.0"
