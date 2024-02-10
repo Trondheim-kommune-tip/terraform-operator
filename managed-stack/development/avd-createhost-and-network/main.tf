@@ -70,9 +70,10 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
 ###################################
 # EXT-1 shared files system
 resource "azurerm_virtual_machine_extension" "attach_file_share" {
-  count                = var.rdsh_count
+  for_each = azurerm_windows_virtual_machine.avd_vm
+  #count                = var.rdsh_count
   name                 = "attach_file_share"
-  virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm[count.index]
+  virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm.id
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
   type_handler_version = "2.0"
@@ -111,8 +112,8 @@ resource "azurerm_storage_share" "files" {
 
     access_policy {
       permissions = "rwdl"
-      start       = "2019-07-02T09:38:21.0000000Z"
-      expiry      = "2019-07-02T10:38:21.0000000Z"
+      start       = "2024-10-10T09:38:21.0000000Z"
+      expiry      = "2026-10-10T10:38:21.0000000Z"
     }
   }
 }
@@ -157,7 +158,8 @@ PROTECTED_SETTINGS
 
   depends_on = [
     azurerm_virtual_network_peering.peer1,
-    azurerm_virtual_network_peering.peer2
+    azurerm_virtual_network_peering.peer2,
+    "azurerm_virtual_machine_extension.attach_file_share"
   ]
 }
 
