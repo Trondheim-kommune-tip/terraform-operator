@@ -1,4 +1,10 @@
-#############################################
+
+#### pre req ####
+# create workspace/hostpool/dag/ws-dag in rg-avd-resources in avd-configure branch
+#######
+
+
+############# config network settings ###################
 #### avd network settings and security groups
 # Use Terraform to create a virtual network
 # Use Terraform to create a subnet
@@ -6,16 +12,16 @@
 # Peering the Azure Virtual Desktop vnet with hub vnet
 ############################################# 
 
-########################
-### avd desktop vnet 
-########################
+#########################################################################################
+### avd desktop vnet. the Idea is to peer the Azure Virtual Desktop vnet with hub vnet
+##############################################################
 resource "azurerm_virtual_network" "vnet" {
   name                = "${var.prefix}-VNet"
   address_space       = var.vnet_range
   dns_servers         = var.dns_servers
   location            = var.deploy_location
-  resource_group_name = var.rg_name                     #### avd-resources-rg 
-  depends_on          = [azurerm_resource_group.rg]
+  resource_group_name = var.rg_name                     #### rg-avd-resources 
+  depends_on          = [azurerm_resource_group.rg]     #### rg-avd-compute
 }
 
 resource "azurerm_subnet" "subnet" {
@@ -23,7 +29,7 @@ resource "azurerm_subnet" "subnet" {
   resource_group_name  = var.rg_name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = var.subnet_range
-  depends_on           = [azurerm_resource_group.rg]
+  depends_on           = [azurerm_resource_group.rg]    #### rg-avd-compute
 }
 
 resource "azurerm_network_security_group" "nsg" {
@@ -63,7 +69,7 @@ resource "azurerm_network_security_group" "nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
-  depends_on = [azurerm_resource_group.rg]
+  depends_on = [azurerm_resource_group.rg]               #### rg-avd-compute
 }
 
 resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
@@ -71,32 +77,37 @@ resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
-#######################
-## hub vnet 
-################
+########
+## hub vnet of AD domain network controller (remote) to peer to the local vnet
+########
 data "azurerm_virtual_network" "ad_vnet_data" {
   name                = var.ad_vnet
   resource_group_name = var.ad_rg
 }
 
-# Peering the Azure Virtual Desktop vnet with hub vnet
+# Peering the Azure Virtual Desktop vnet with hub vnet of AAD DC 
 resource "azurerm_virtual_network_peering" "peer1" {
   name                      = "peer_avdspoke_ad"
-  resource_group_name       = var.rg_name
-  virtual_network_name      = azurerm_virtual_network.vnet.name
-  remote_virtual_network_id = data.azurerm_virtual_network.ad_vnet_data.id
+  resource_group_name       = var.rg_name                         # rg-avd-resources
+  virtual_network_name      = azurerm_virtual_network.vnet.name   # ${var.prefix}-VNet
+  remote_virtual_network_id = data.azurerm_virtual_network.ad_vnet_data.id   # AD vnet 
 }
 
 resource "azurerm_virtual_network_peering" "peer2" {
   name                      = "peer_ad_avdspoke"
-  resource_group_name       = var.ad_rg
-  virtual_network_name      = var.ad_vnet
-  remote_virtual_network_id = azurerm_virtual_network.vnet.id
+  resource_group_name       = var.ad_rg                           # Rg-hubvnet-noe-prod of AD onprem
+  virtual_network_name      = var.ad_vnet                         # vnet-hub-noe-prodx of AD
+  remote_virtual_network_id = azurerm_virtual_network.vnet.id     # local network vnet
 }
 
 
+
+
+################################################
+#################################################
+## Configure Azure Virtual Desktop session hosts
 #######################
-# NIC for VMs
+# NIC for AVD VMs in rg-avd-compute rg
 # Use Terraform to create NIC for each session host
 # Use Terraform to create VM for session host
 # Join VM to domain
@@ -121,6 +132,7 @@ resource "azurerm_resource_group" "rg" {
   location = var.resource_group_location
 }
 
+###### NIC
 resource "azurerm_network_interface" "avd_vm_nic" {
   count               = var.rdsh_count
   name                = "${var.prefix}-${count.index + 1}-nic"
@@ -158,73 +170,22 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
     disk_size_gb         = "100"
   }
 
-  source_image_reference {
-    publisher = "MicrosoftWindowsDesktop"
-    offer     = "Windows-11"
-    sku       = "win11-22h2-avd"
-    version   = "latest"
-  }
+  #source_image_reference {
+  #  publisher = "MicrosoftWindowsDesktop"
+  #  offer     = "office-365"
+  #  sku       = "win11-23h2-avd-m365"
+  #  version   = "latest"
+  #}
+  source_image_id = data.azurerm_shared_image.win11.id
 
   depends_on = [
     azurerm_resource_group.rg,
-    azurerm_network_interface.avd_vm_nic
+    azurerm_network_interface.avd_vm_nic,
+    azurerm_shared_image.win11
   ]
 }
 
 
-###################################
-# shared file shared
-resource "azurerm_storage_account" "storage_account" {
-  name                     = "avdsharedstorage"
-  resource_group_name      = azurerm_resource_group.rg.name
-  location                 = "northeurope"
-  account_kind             = "StorageV2"
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-  access_tier              = "Cool"
-  enable_https_traffic_only = true
-}
-
-resource "azurerm_storage_share" "files" {
-  name                 = "files"
-  storage_account_name = azurerm_storage_account.storage_account.name
-  # 200 GB shared drive
-  quota                = 200
-
-  acl {
-    id = "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI"
-
-    access_policy {
-      permissions = "rwdl"
-      start       = "2024-10-10T09:38:21.0000000Z"
-      expiry      = "2026-10-10T10:38:21.0000000Z"
-    }
-  }
-}
-
-# EXT-1 shared files system
-resource "azurerm_virtual_machine_extension" "attach_file_share" {
-  for_each = azurerm_windows_virtual_machine.avd_vm
-  #count                = var.rdsh_count
-  name                 = "attach_file_share"
-  virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm[each.value.id]
-  publisher            = "Microsoft.Azure.Extensions"
-  type                 = "CustomScript"
-  type_handler_version = "2.0"
-
-  settings = <<SETTINGS
-  {
-  "commandToExecute": "hostname"
-  }
-SETTINGS
-
-
-  tags = {
-    environment = "Production"
-  }
-}
-
-#############################
 # get AD tenant domain name 
 # retrieves your primary Azure AD tenant domain. 
 # Terraform will use this to create user principal names for your users.
@@ -265,12 +226,11 @@ PROTECTED_SETTINGS
 
   depends_on = [
     azurerm_virtual_network_peering.peer1,
-    azurerm_virtual_network_peering.peer2,
-    azurerm_virtual_machine_extension.attach_file_share
+    azurerm_virtual_network_peering.peer2
   ]
 }
 
-######################
+#############
 # EXT-2 vm ext Number of AVD machines to deploy
 resource "azurerm_virtual_machine_extension" "vmext_dsc" {
   count                      = var.rdsh_count
@@ -311,6 +271,12 @@ PROTECTED_SETTINGS
   ]
 }
 
+
+
+
+###################
+###################
+###################
 #########
 # RBac 
 #########
@@ -351,4 +317,109 @@ resource "azurerm_role_assignment" "role_sessionhost" {
   scope              = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
   role_definition_id = data.azurerm_role_definition.role_session_host.id
   principal_id       = data.azuread_group.aad_group.object_id
+}
+
+
+########################
+#######################
+#### shared storage 
+## Create a Resource Group for Storage
+resource "azurerm_resource_group" "rg_storage" {
+  location = var.deploy_location
+  name     = var.rg_stor
+}
+
+# generate a random string (consisting of four characters)
+# https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string
+resource "random_string" "random" {
+  length  = 4
+  upper   = false
+  special = false
+}
+
+## Azure Storage Accounts requires a globally unique names
+## https://docs.microsoft.com/en-us/azure/storage/common/storage-account-overview
+## Create a File Storage Account 
+resource "azurerm_storage_account" "storage" {
+  name                     = "stor${random_string.random.id}"
+  resource_group_name      = azurerm_resource_group.rg_storage.name
+  location                 = azurerm_resource_group.rg_storage.location
+  account_tier             = "Premium"
+  account_replication_type = "LRS"
+  account_kind             = "FileStorage"
+}
+
+resource "azurerm_storage_share" "FSShare" {
+  name                 = "fslogix"
+  storage_account_name = azurerm_storage_account.storage.name
+  depends_on           = [azurerm_storage_account.storage]
+}
+
+## Azure built-in roles
+## https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
+data "azurerm_role_definition" "storage_role" {
+  name = "Storage File Data SMB Share Contributor"
+}
+
+resource "azurerm_role_assignment" "af_role" {
+  scope              = azurerm_storage_account.storage.id
+  role_definition_id = data.azurerm_role_definition.storage_role.id
+  principal_id       = azuread_group.aad_group.id
+}
+
+
+
+
+#######
+##################
+# compute gallery
+resource "azurerm_resource_group" "sigrg" {
+  location = var.deploy_location
+  name     = var.rg_shared_name
+}
+
+# generate a random string (consisting of four characters)
+# https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string
+resource "random_string" "random" {
+  length  = 4
+  upper   = false
+  special = false
+}
+
+
+# Creates Shared Image Gallery
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/shared_image_gallery
+resource "azurerm_shared_image_gallery" "sig" {
+  name                = "sig${random_string.random.id}"
+  resource_group_name = azurerm_resource_group.sigrg.name
+  location            = azurerm_resource_group.sigrg.location
+  description         = "Shared images"
+
+  tags = {
+    Environment = "Demo"
+    Tech        = "Terraform"
+  }
+}
+
+#Creates image definition
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/shared_image
+resource "azurerm_shared_image" "win11" {
+  name                = "avd-image"
+  gallery_name        = azurerm_shared_image_gallery.sig.name
+  resource_group_name = azurerm_resource_group.sigrg.name
+  location            = azurerm_resource_group.sigrg.location
+  os_type             = "Windows"
+
+  identifier {
+    publisher = "MicrosoftWindowsDesktop"
+    offer     = "office-365"
+    #sku       = "20h2-evd-o365pp"
+    sku       = "win11-23h2-avd-m365"                    # win11 ent
+  }
+}
+
+data "azurerm_shared_image" "win11" {
+  name                = "avd-image"
+  gallery_name        = "sig${random_string.random.id}"
+  resource_group_name = azurerm_resource_group.sigrg.name
 }

@@ -38,3 +38,18 @@ output "AVD_user_groupname" {
   description = "Azure Active Directory Group for AVD users"
   value       = data.azuread_group.aad_group.display_name
 }
+
+output "storage_account" {
+  description = "Storage account for Profiles"
+  value       = azurerm_storage_account.storage.name
+}
+
+output "storage_account_share" {
+  description = "Name of the Azure File Share created for FSLogix"
+  value       = azurerm_storage_share.FSShare.name
+}
+
+output "Compute_Gallery" {
+  description = "Azure Compute Gallery"
+  value       = azurerm_shared_image_gallery.sig.name
+}

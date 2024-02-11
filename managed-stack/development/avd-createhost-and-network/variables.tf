@@ -1,3 +1,9 @@
+
+####################
+####################
+## Create a host : NIC creation and session host VM, join domain, register with avd
+###################
+
 variable "resource_group_location" {
   default     = "northeurope"
   description = "Location of the resource group."
@@ -23,19 +29,19 @@ variable "prefix" {
 
 variable "domain_name" {
   type        = string
-  default     = "infra.local"
+  default     = "tk.local"
   description = "Name of the domain to join"
 }
 
 variable "domain_user_upn" {
   type        = string
-  default     = "domainjoineruser" # do not include domain name as this is appended
+  default     = "testcifs" # do not include domain name as this is appended
   description = "Username for domain join (do not include domain name as this is appended)"
 }
 
 variable "domain_password" {
   type        = string
-  default     = "ChangeMe123!"
+  default     = "tk1234"
   description = "Password of the user to authenticate with the domain"
   sensitive   = true
 }
@@ -47,7 +53,7 @@ variable "azure_virtual_desktop_host_pool_name" {
 }
 
 // run this command on Powershell to know the types and SKU available 
-// Get-AzVmImageSku -Location 'Norway East' -PublisherName 'MicrosoftWindowsDesktop' -Offer 'Windows-11'
+// Get-AzVmImageSku -Location 'North Europe' -PublisherName 'MicrosoftWindowsDesktop' -Offer 'Windows-11'
 variable "vm_size" {
   description = "Size of the machine to deploy"
   // default     = "Standard_DS2_v2"
@@ -71,6 +77,17 @@ variable "local_admin_password" {
   sensitive   = true
 }
 
+
+
+
+
+
+
+
+########################
+### avd desktop vnet, NIC, session host
+########################
+
 variable "rg_name" {
   type        = string
   default     = "rg-avd-resources"
@@ -85,7 +102,7 @@ variable "rg_shared_name" {
 
 variable "deploy_location" {
   type        = string
-  default     = "norwayeast"
+  default     = "northeurope"
   description = "The Azure Region in which all resources in this example should be created."
 }
 
@@ -125,6 +142,17 @@ variable "azurerm_virtual_desktop_host_pool_registration_info_registrationinfo_t
 }
 
 
+#############
+##############
+variable "rg_stor" {
+  type        = string
+  default     = "rg-avd-storage"
+  description = "Name of the Resource group in which to deploy storage"
+}
+
+
+####################
+####################
 ####################
 # RBAC
 variable "arm_client_id" {

@@ -1,23 +1,23 @@
 # Customized the sample values below for your environment and either rename to terraform.tfvars or env.auto.tfvars
 
-### desktop 
+### Azure desktop VMs network 
 deploy_location      = "northeurope"
-rg_name              = "avd-resources-rg"
+rg_name              = "rg-avd-resources" # same rg for workspace/hostpool/dag/ws-dag
 prefix               = "avdtf"
-local_admin_username = "localadm"
-local_admin_password = "ChangeMe123$"
+local_admin_username = "Avddesktop123adm"
+local_admin_password = "Avddesktop123$"
 vnet_range           = ["10.1.0.0/16"]
 subnet_range         = ["10.1.0.0/24"]
 dns_servers          = ["10.0.1.4", "168.63.129.16"]
 #aad_group_name       = "Terraform-RPA"
 domain_name          = "tka.local"
 domain_user_upn      = "testcifs"     # do not include domain name as this is appended
-domain_password      = "tk2006"
+domain_password      = "tk1234"       # give dummy values here and pass by secret in spacelift stack. 
 
 
-# hub network 
-ad_vnet              = "infra-network"
-ad_rg                = "infra-rg"
+# hub network AAD Domain controllers. 
+ad_vnet              = "vnet-hub-noe-prodx"
+ad_rg                = "Rg-hubvnet-noe-prod"
 #avd_users = [
 #  "Mikal.Rekdal@trondheim.kommune.no",
 #  "sarumathy.soosaipillai@trondheim.kommune.no",
@@ -26,4 +26,3 @@ ad_rg                = "infra-rg"
 #  "robot.roger.robot.roger@trondheim.kommune.no",
 #  "caroline.skram.by@trondheim.kommune.no",
 #  "kitti.lai@trondheim.kommune.no"
-#]
