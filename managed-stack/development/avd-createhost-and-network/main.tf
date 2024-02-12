@@ -353,6 +353,16 @@ resource "azurerm_storage_share" "FSShare" {
   name                 = "fslogix"
   storage_account_name = azurerm_storage_account.storage.name
   depends_on           = [azurerm_storage_account.storage]
+  quota                = 500
+  acl {
+    id = "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI"
+
+    access_policy {
+      permissions = "rwdl"
+      start       = "2024-02-12T09:38:21.0000000Z"
+      expiry      = "2025-02-12T10:38:21.0000000Z"
+    }
+  }
 }
 
 ## Azure built-in roles
@@ -364,7 +374,7 @@ data "azurerm_role_definition" "storage_role" {
 resource "azurerm_role_assignment" "af_role" {
   scope              = azurerm_storage_account.storage.id
   role_definition_id = data.azurerm_role_definition.storage_role.id
-  principal_id       = azuread_group.aad_group.id
+  principal_id       = data.azuread_group.aad_group.object_id
 }
 
 
