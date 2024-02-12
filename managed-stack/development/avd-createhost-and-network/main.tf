@@ -331,7 +331,7 @@ resource "azurerm_resource_group" "rg_storage" {
 
 # generate a random string (consisting of four characters)
 # https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string
-resource "random_string" "random" {
+resource "random_string" "random_SS" {
   length  = 4
   upper   = false
   special = false
@@ -341,7 +341,7 @@ resource "random_string" "random" {
 ## https://docs.microsoft.com/en-us/azure/storage/common/storage-account-overview
 ## Create a File Storage Account 
 resource "azurerm_storage_account" "storage" {
-  name                     = "stor${random_string.random.id}"
+  name                     = "stor${random_string.random_SS.id}"
   resource_group_name      = azurerm_resource_group.rg_storage.name
   location                 = azurerm_resource_group.rg_storage.location
   account_tier             = "Premium"
