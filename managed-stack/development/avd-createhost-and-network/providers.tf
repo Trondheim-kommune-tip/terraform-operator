@@ -45,6 +45,7 @@ provider "azurerm" {
   tenant_id     = "${var.arm_tenant_id}"            # 831195d3-b68b-433a-8687-4cdb1532958e
   subscription_id = "${var.ad_arm_subscription_id}" # 1fe8b9ee-48c3-4004-bc0a-d9eddc90d80f ad_arm_subscription_id
   alias = "siteAD"
+  skip_provider_registration = true
 }
 #######
 
