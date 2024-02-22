@@ -11,11 +11,6 @@ terraform {
   }
 }
 
-# RPA resource provider
-provider "azurerm" {
-  features {}
-}
-
 
 ## AD domains
 # Configure the Azure Active Directory Provider then only domain join worked. above RM was there.
