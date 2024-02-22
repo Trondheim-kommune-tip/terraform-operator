@@ -121,8 +121,8 @@ resource "azurerm_virtual_network_peering" "peer1" {
 # Peering the AD hub vnet to AVD network 
 resource "azurerm_virtual_network_peering" "peer2" {
   name                          = "peer_ad_avdspoke"
-  resource_group_name           = data.azurerm_resource_group.siteAD.id    # Rg-hubvnet-noe-prod of AD onprem/azure
-  virtual_network_name          = data.azurerm_virtual_network.vnetAD.id   # vnet-hub-noe-prodx of AD
+  resource_group_name           = azurerm_resource_group.siteAD.id    # Rg-hubvnet-noe-prod of AD onprem/azure
+  virtual_network_name          = azurerm_virtual_network.vnetAD.id   # vnet-hub-noe-prodx of AD
   remote_virtual_network_id     = azurerm_virtual_network.vnet.id          # local network vnet
 }
 
