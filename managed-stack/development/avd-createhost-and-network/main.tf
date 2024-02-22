@@ -85,10 +85,10 @@ resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
 ## IT-cont-01 hub vnet of AD domain network controller (remote) to peer to the local vnet
 ########
 # Azure resource group for site b which is AD
-resource "azurerm_resource_group" "siteAD" {
-  name     = "peering-siteAD-rg"
-  location = "northeurope"
-  provider = azurerm.siteAD
+data "azurerm_resource_group" "siteAD" {
+  name     = "rg-hubvnet-noe-prod"
+  location = "norwayeast"
+  #provider = azurerm.siteAD
 }
 
 data "azurerm_virtual_network" "ad_vnet_data" {

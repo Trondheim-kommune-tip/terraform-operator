@@ -16,7 +16,7 @@ domain_password      = "tk1234"       # give dummy values here and pass by secre
 
 
 # hub network AAD Domain controllers. 
-ad_vnet              = "vnet-hub-noe-prodx"
+ad_vnet              = "vnet-hub-noe-prod"
 ad_rg                = "Rg-hubvnet-noe-prod"
 #avd_users = [
 #  "Mikal.Rekdal@trondheim.kommune.no",
