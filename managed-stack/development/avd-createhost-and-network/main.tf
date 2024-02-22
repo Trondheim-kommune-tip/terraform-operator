@@ -4,7 +4,7 @@
 #######
 
 
-############# config network settings ###################
+############# config network settings for VMs ###################
 #### avd network settings and security groups
 # Use Terraform to create a virtual network
 # Use Terraform to create a subnet
@@ -77,27 +77,53 @@ resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
+
+
+
+
 ########
-## hub vnet of AD domain network controller (remote) to peer to the local vnet
+## IT-cont-01 hub vnet of AD domain network controller (remote) to peer to the local vnet
 ########
-data "azurerm_virtual_network" "ad_vnet_data" {
-  name                = var.ad_vnet
-  resource_group_name = var.ad_rg
+#data "azurerm_virtual_network" "ad_vnet_data" {
+#  name                = var.ad_vnet
+#  resource_group_name = var.ad_rg
+#}
+
+# Azure resource group for site b which is AD
+resource "azurerm_resource_group" "siteAD" {
+  name     = "peering-siteAD-rg"
+  location = "northeurope"
+  provider = azurerm.siteAD
 }
+
+# Azure virtual network deployment for site b (AD)
+resource "azurerm_virtual_network" "vnetAD" {
+  name                = "peering-vnet-AD"
+  resource_group_name = azurerm_resource_group.siteAD.name
+  location            = azurerm_resource_group.siteAD.location
+  address_space       = ["10.20.0.0/16"]
+  provider = azurerm.siteAD
+}
+#########
 
 # Peering the Azure Virtual Desktop vnet with hub vnet of AAD DC 
 resource "azurerm_virtual_network_peering" "peer1" {
-  name                      = "peer_avdspoke_ad"
-  resource_group_name       = var.rg_name                         # rg-avd-resources
-  virtual_network_name      = azurerm_virtual_network.vnet.name   # ${var.prefix}-VNet
-  remote_virtual_network_id = data.azurerm_virtual_network.ad_vnet_data.id   # AD vnet 
+  name                         = "peer_avdspoke_ad"
+  resource_group_name          = var.rg_name                              # rg-avd-resources
+  virtual_network_name         = azurerm_virtual_network.vnet.name        # ${var.prefix}-VNet  vnet fir RPA/AVD subs
+  remote_virtual_network_id    = data.azurerm_virtual_network.vnetAD.id   # AD vnet 
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
+  # `allow_gateway_transit` must be set to false for vnet Global Peering
+  allow_gateway_transit        = false
 }
 
+# Peering the AD hub vnet to AVD network 
 resource "azurerm_virtual_network_peering" "peer2" {
-  name                      = "peer_ad_avdspoke"
-  resource_group_name       = var.ad_rg                           # Rg-hubvnet-noe-prod of AD onprem
-  virtual_network_name      = var.ad_vnet                         # vnet-hub-noe-prodx of AD
-  remote_virtual_network_id = azurerm_virtual_network.vnet.id     # local network vnet
+  name                          = "peer_ad_avdspoke"
+  resource_group_name           = data.azurerm_resource_group.siteAD.id    # Rg-hubvnet-noe-prod of AD onprem/azure
+  virtual_network_name          = data.azurerm_virtual_network.vnetAD.id   # vnet-hub-noe-prodx of AD
+  remote_virtual_network_id     = azurerm_virtual_network.vnet.id          # local network vnet
 }
 
 

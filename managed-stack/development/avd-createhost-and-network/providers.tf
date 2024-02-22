@@ -11,18 +11,48 @@ terraform {
   }
 }
 
+# RPA resource provider
 provider "azurerm" {
   features {}
-  client_id     = "${var.arm_client_id}"
-  client_secret = "${var.arm_client_secret}"
-  tenant_id     = "${var.arm_tenant_id}"
-  subscription_id = "${var.arm_subscription_id}"
 }
 
 
-# Configure the Azure Active Directory Provider
+## AD domains
+# Configure the Azure Active Directory Provider then only domain join worked. above RM was there.
 provider "azuread" {
-  tenant_id = "${var.arm_tenant_id}"
-  client_id     = "${var.arm_client_id}"
-  client_secret = "${var.arm_client_secret}"
+  client_id     = "${var.arm_client_id}"       # 7b0a46b0-b657-422a-9e03-fb6818021ff6
+  client_secret = "${var.arm_client_secret}"   # see lastpass ends with qcnc
+  tenant_id = "${var.arm_tenant_id}"           # 831195d3-b68b-433a-8687-4cdb1532958e
 }
+
+
+
+#### peering 
+# RPA subs
+provider "azurerm" {
+  features {}
+  client_id     = "${var.arm_client_id}"         # 7b0a46b0-b657-422a-9e03-fb6818021ff6
+  client_secret = "${var.arm_client_secret}"     # see lastpass ends with qcnc
+  tenant_id     = "${var.arm_tenant_id}"         # 831195d3-b68b-433a-8687-4cdb1532958e TK tenant
+  subscription_id = "${var.arm_subscription_id}" # 225e8bed-0445-4aa4-a9b7-a306aca77ad5 RPA subs
+}
+
+
+##### AD 
+# it-con-01 AD domain controller access and role assignment using service principal
+######
+# Configure the Azure Active Directory Provider
+# useful for the section data "azuread_domains" "avd_domain"
+# AD role assignment principal
+# AD network resource provider for peering need app reg service principles
+provider "azurerm" {
+  features {}
+  tenant_id     = "${var.arm_tenant_id}"            # 831195d3-b68b-433a-8687-4cdb1532958e
+  subscription_id = "${var.ad_arm_subscription_id}" # 1fe8b9ee-48c3-4004-bc0a-d9eddc90d80f ad_arm_subscription_id
+  alias = "siteAD"
+}
+#######
+
+# RPA network info
+# subs id : 225e8bed-0445-4aa4-a9b7-a306aca77ad5
+# tenant id: 831195d3-b68b-433a-8687-4cdb1532958e

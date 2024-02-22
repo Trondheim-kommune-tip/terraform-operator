@@ -157,25 +157,31 @@ variable "rg_stor" {
 # RBAC
 variable "arm_client_id" {
   type = string
-  description = "azure AD client id"
+  description = "azure RPA client id"
   default = "id"
 }
 
 variable "arm_client_secret" {
   type = string
-  description = "azure AD client secret"
+  description = "azure RPA client secret"
   default = "id"
 }
 
 variable "arm_tenant_id" {
   type = string
-  description = "azure AD tenant id"
+  description = "azure RPA tenant id"
   default = "id"
 }
 
 variable "arm_subscription_id" {
   type = string
   description = "azure AD subs id"
+  default = "id"
+}
+
+variable "ad_arm_subscription_id {
+  type = string
+  description = "azure AD subs id for peering"
   default = "id"
 }
 
