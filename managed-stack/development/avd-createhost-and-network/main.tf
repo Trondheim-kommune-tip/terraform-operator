@@ -86,7 +86,7 @@ resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
 ########
 # Azure resource group for site b which is AD
 data "azurerm_resource_group" "siteAD" {
-  name     = "rg-hubvnet-noe-prod"
+  name     = var.ad_rg
   location = "norwayeast"
   #provider = azurerm.siteAD
 }
