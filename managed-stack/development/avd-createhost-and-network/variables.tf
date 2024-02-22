@@ -179,7 +179,7 @@ variable "arm_subscription_id" {
   default = "id"
 }
 
-variable "ad_arm_subscription_id {
+variable "ad_arm_subscription_id" {
   type = string
   description = "azure AD subs id for peering"
   default = "id"
