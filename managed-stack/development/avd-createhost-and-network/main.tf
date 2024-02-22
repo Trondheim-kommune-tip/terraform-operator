@@ -111,7 +111,7 @@ resource "azurerm_virtual_network_peering" "peer1" {
   name                         = "peer_avdspoke_ad"
   resource_group_name          = var.rg_name                              # rg-avd-resources
   virtual_network_name         = azurerm_virtual_network.vnet.name        # ${var.prefix}-VNet  vnet fir RPA/AVD subs
-  remote_virtual_network_id    = data.azurerm_virtual_network.vnetAD.id   # AD vnet 
+  remote_virtual_network_id    = azurerm_virtual_network.vnetAD.id   # AD vnet 
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
   # `allow_gateway_transit` must be set to false for vnet Global Peering
