@@ -99,8 +99,8 @@ data "azurerm_virtual_network" "ad_vnet_data" {
 # Azure virtual network deployment for site b (AD)
 #resource "azurerm_virtual_network" "vnetAD" {
 #  name                = "peering-vnet-AD"
-#  resource_group_name = azurerm_resource_group.siteAD.name
-#  location            = azurerm_resource_group.siteAD.location
+#  resource_group_name = data.azurerm_resource_group.siteAD.name
+#  location            = data.azurerm_resource_group.siteAD.location
 #  address_space       = ["10.20.0.0/16"]
 #  provider = azurerm.siteAD
 #}
@@ -121,8 +121,8 @@ resource "azurerm_virtual_network_peering" "peer1" {
 # Peering the AD hub vnet to AVD network 
 resource "azurerm_virtual_network_peering" "peer2" {
   name                          = "peer_ad_avdspoke"
-  resource_group_name           = azurerm_resource_group.siteAD.id               # Rg-hubvnet-noe-prod of AD onprem/azure
-  virtual_network_name          = data.azurerm_virtual_network.ad_vnet_data.id   # vnet-hub-noe-prodx of AD
+  resource_group_name           = var.ad_rg                                      # Rg-hubvnet-noe-prod of AD onprem/azure
+  virtual_network_name          = var.ad_vnet                                    # vnet-hub-noe-prodx of AD
   remote_virtual_network_id     = azurerm_virtual_network.vnet.id                # local network vnet
 }
 
