@@ -144,11 +144,11 @@ variable "azurerm_virtual_desktop_host_pool_registration_info_registrationinfo_t
 
 #############
 ##############
-variable "rg_stor" {
-  type        = string
-  default     = "rg-avd-storage"
-  description = "Name of the Resource group in which to deploy storage"
-}
+#variable "rg_stor" {
+#  type        = string
+#  default     = "rg-avd-storage"
+#  description = "Name of the Resource group in which to deploy storage"
+#}
 
 
 ####################

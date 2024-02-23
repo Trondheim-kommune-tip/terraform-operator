@@ -24,6 +24,7 @@ resource "azurerm_virtual_network" "vnet" {
   depends_on          = [azurerm_resource_group.rg]     #### rg-avd-compute
 }
 
+# subnet for VMs
 resource "azurerm_subnet" "subnet" {
   name                 = "default"
   resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
@@ -350,9 +351,53 @@ resource "azurerm_role_assignment" "role_sessionhost" {
 #######################
 #### shared storage 
 ## Create a Resource Group for Storage
-resource "azurerm_resource_group" "rg_storage" {
-  location = var.deploy_location
-  name     = var.rg_stor
+#resource "azurerm_resource_group" "rg_storage" {
+#  location = var.deploy_location
+#  name     = var.rg_stor
+#}
+
+
+resource "azurerm_subnet" "subnet-storage" {
+  name                 = "default"
+  resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = var.subnet_range
+  service_endpoints    = ["Microsoft.Sql", "Microsoft.Storage", "Microsoft.AzureActiveDirectory", "Microsoft.Storage.Global"]
+  depends_on           = [azurerm_resource_group.rg]    #### rg-avd-compute
+}
+
+resource "azurerm_network_security_group" "nsg-storage" {
+  name                = "${var.prefix}-NSG"
+  location            = var.deploy_location
+  resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"
+  security_rule {
+    name                       = "vm2smbstorage"
+    priority                   = 1004
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_ranges     = ["445"]
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+  security_rule {
+    name                       = "smbstorageoutbound2internet"
+    priority                   = 110
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_ranges     = ["*"]
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+  depends_on = [azurerm_resource_group.rg]               #### rg-avd-compute
+}
+
+resource "azurerm_subnet_network_security_group_association" "nsg_assoc_subnet_storage" {
+  subnet_id                 = azurerm_subnet.subnet-storage.id
+  network_security_group_id = azurerm_network_security_group.nsg-storage.id
 }
 
 # generate a random string (consisting of four characters)
@@ -380,15 +425,6 @@ resource "azurerm_storage_share" "FSShare" {
   storage_account_name = azurerm_storage_account.storage.name
   depends_on           = [azurerm_storage_account.storage]
   quota                = 500
-  acl {
-    id = "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI"
-
-    access_policy {
-      permissions = "rwdl"
-      start       = "2024-02-12T09:38:21.0000000Z"
-      expiry      = "2025-02-12T10:38:21.0000000Z"
-    }
-  }
 }
 
 ## Azure built-in roles
