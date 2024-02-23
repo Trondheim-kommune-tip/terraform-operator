@@ -1,6 +1,5 @@
 ########
 ## IT-cont-01 hub vnet of AD domain network controller (remote) to peer to the local vnet
-########
 # Azure resource group for site b which is AD
 data "azurerm_resource_group" "siteAD" {
   name     = var.ad_rg

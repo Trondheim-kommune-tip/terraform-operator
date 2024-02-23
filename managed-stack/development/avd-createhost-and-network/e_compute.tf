@@ -1,4 +1,3 @@
-#######
 ##################
 # compute gallery
 resource "azurerm_resource_group" "sigrg" {

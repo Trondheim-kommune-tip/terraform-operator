@@ -1,7 +1,4 @@
-
-
 ########################
-#######################
 #### shared storage 
 ## Create a Resource Group for Storage
 #resource "azurerm_resource_group" "rg_storage" {
