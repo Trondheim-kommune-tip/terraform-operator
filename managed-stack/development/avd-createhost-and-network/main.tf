@@ -440,9 +440,9 @@ resource "azurerm_storage_share" "FSShare" {
 
 resource "azurerm_storage_account_network_rules" "storage" {
   storage_account_id         = azurerm_storage_account.storage.id
-  #ip_rules                  = ["10.1.1.0/24"]
+  ip_rules                  = ["127.0.0.1"]
   virtual_network_subnet_ids = [azurerm_subnet.subnet-storage.id]
-  default_action             = "Deny"
+  default_action             = "Allow"
   bypass                     = ["AzureServices", "Logging", "Metrics"]
 }
 
