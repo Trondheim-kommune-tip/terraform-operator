@@ -427,6 +427,15 @@ resource "azurerm_storage_share" "FSShare" {
   storage_account_name = azurerm_storage_account.storage.name
   depends_on           = [azurerm_storage_account.storage]
   quota                = 500
+  acl {
+    id = "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI"
+
+    access_policy {
+      permissions = "rwdl"
+      start       = "2024-02-23T17:02:21.0000000Z"
+      expiry      = "2024-12-23T10:38:21.0000000Z"
+    }
+  }
 }
 
 ## Azure built-in roles
