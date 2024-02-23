@@ -438,6 +438,15 @@ resource "azurerm_storage_share" "FSShare" {
   }
 }
 
+resource "azurerm_storage_account_network_rules" "storage" {
+  storage_account_id = azurerm_storage_account.storage.id
+
+  default_action             = "Allow"
+  ip_rules                   = ["10.1.1.0/24"]
+  virtual_network_subnet_ids = [azurerm_subnet.subnet-storage.id]
+  bypass                     = ["Metrics"]
+}
+
 ## Azure built-in roles
 ## https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
 data "azurerm_role_definition" "storage_role" {
