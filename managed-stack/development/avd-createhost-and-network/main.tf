@@ -362,7 +362,7 @@ resource "azurerm_subnet" "subnet-storage" {
   resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = var.storage_subnet_range
-  service_endpoints    = ["Microsoft.Sql", "Microsoft.Storage", "Microsoft.AzureActiveDirectory", "Microsoft.Storage.Global"]
+  service_endpoints    = ["Microsoft.Sql", "Microsoft.Storage", "Microsoft.AzureActiveDirectory"]
   depends_on           = [azurerm_resource_group.rg]    #### rg-avd-compute
 }
 
@@ -410,6 +410,7 @@ resource "random_string" "random_SS" {
 
 ## Azure Storage Accounts requires a globally unique names
 ## https://docs.microsoft.com/en-us/azure/storage/common/storage-account-overview
+## add permits to 7b0a46b0-b657-422a-9e03-fb6818021ff6 App registration id in rpa subs Contributor and User Access Administrator roles / Storage Blob Data  Owner
 ## Create a File Storage Account 
 resource "azurerm_storage_account" "storage" {
   name                     = "stor${random_string.random_SS.id}"
