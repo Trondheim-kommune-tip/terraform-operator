@@ -413,8 +413,8 @@ resource "random_string" "random_SS" {
 ## Create a File Storage Account 
 resource "azurerm_storage_account" "storage" {
   name                     = "stor${random_string.random_SS.id}"
-  resource_group_name      = azurerm_resource_group.rg_storage.name
-  location                 = azurerm_resource_group.rg_storage.location
+  resource_group_name      = "${var.azure_virtual_desktop_compute_resource_group}"
+  location                 = var.deploy_location
   account_tier             = "Premium"
   account_replication_type = "LRS"
   account_kind             = "FileStorage"
