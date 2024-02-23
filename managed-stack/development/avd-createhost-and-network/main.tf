@@ -439,12 +439,11 @@ resource "azurerm_storage_share" "FSShare" {
 }
 
 resource "azurerm_storage_account_network_rules" "storage" {
-  storage_account_id = azurerm_storage_account.storage.id
-
-  default_action             = "Allow"
-  ip_rules                   = ["10.1.1.0/24"]
+  storage_account_id         = azurerm_storage_account.storage.id
+  #ip_rules                  = ["10.1.1.0/24"]
   virtual_network_subnet_ids = [azurerm_subnet.subnet-storage.id]
-  bypass                     = ["Metrics"]
+  default_action             = "Deny"
+  bypass                     = ["AzureServices", "Logging", "Metrics"]
 }
 
 ## Azure built-in roles
