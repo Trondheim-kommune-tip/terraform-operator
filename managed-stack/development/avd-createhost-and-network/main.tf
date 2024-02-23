@@ -361,18 +361,18 @@ resource "azurerm_subnet" "subnet-storage" {
   name                 = "default"
   resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = var.subnet_range
+  address_prefixes     = var.storage_subnet_range
   service_endpoints    = ["Microsoft.Sql", "Microsoft.Storage", "Microsoft.AzureActiveDirectory", "Microsoft.Storage.Global"]
   depends_on           = [azurerm_resource_group.rg]    #### rg-avd-compute
 }
 
 resource "azurerm_network_security_group" "nsg-storage" {
-  name                = "${var.prefix}-NSG"
+  name                = "${var.prefix}-storage-NSG"
   location            = var.deploy_location
   resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"
   security_rule {
     name                       = "vm2smbstorage"
-    priority                   = 1004
+    priority                   = 100
     direction                  = "Outbound"
     access                     = "Allow"
     protocol                   = "*"
