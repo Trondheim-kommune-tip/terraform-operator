@@ -218,3 +218,10 @@ variable "itcon01_rpa_adhub_secret" {
   description = "azure RPA-AD client secret"
   default = "id"
 }
+
+#### avd configure rg-avd-resources
+variable "azure_virtual_desktop_compute_resource_group" {
+  type = string
+  description = "rg-avd-resources"
+  default = "id"
+}
