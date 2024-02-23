@@ -358,7 +358,7 @@ resource "azurerm_role_assignment" "role_sessionhost" {
 
 
 resource "azurerm_subnet" "subnet-storage" {
-  name                 = "default"
+  name                 = "default-storage"
   resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = var.storage_subnet_range
