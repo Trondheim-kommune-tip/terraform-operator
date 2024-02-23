@@ -418,6 +418,7 @@ resource "azurerm_storage_account" "storage" {
   account_tier             = "Premium"
   account_replication_type = "LRS"
   account_kind             = "FileStorage"
+  allow_nested_items_to_be_public = false
   public_network_access_enabled = false
 }
 
