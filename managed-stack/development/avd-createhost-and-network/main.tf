@@ -87,13 +87,13 @@ resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
 # Azure resource group for site b which is AD
 data "azurerm_resource_group" "siteAD" {
   name     = var.ad_rg
-  #location = "norwayeast"
   provider = azurerm.siteAD
 }
 
 data "azurerm_virtual_network" "ad_vnet_data" {
   name                = var.ad_vnet
   resource_group_name = data.azurerm_resource_group.siteAD.name
+  provider = azurerm.siteAD
 }
 
 # Azure virtual network deployment for site b (AD)

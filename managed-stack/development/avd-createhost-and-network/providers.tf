@@ -43,8 +43,8 @@ provider "azurerm" {
 # AD network resource provider for peering need app reg service principles
 provider "azurerm" {
   features {}
-  client_id     = "667fe58f-3898-4c89-959e-a446c668376a" # sp for AD
-  client_secret = "${var.itcon01_rpa_adhub_secret}" # sp secret for rpa AD
+  client_id     = "667fe58f-3898-4c89-959e-a446c668376a" # client id for rpa-ad-hub-access app reg
+  client_secret = "${var.itcon01_rpa_adhub_secret}" # client secret for rpa-ad-hub-access app reg
   tenant_id     = "${var.arm_tenant_id}"            # 831195d3-b68b-433a-8687-4cdb1532958e
   subscription_id = "${var.ad_arm_subscription_id}" # 1fe8b9ee-48c3-4004-bc0a-d9eddc90d80f ad_arm_subscription_id
   alias = "siteAD"
