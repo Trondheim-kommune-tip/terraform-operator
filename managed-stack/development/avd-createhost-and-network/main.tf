@@ -377,7 +377,7 @@ resource "azurerm_network_security_group" "nsg-storage" {
     access                     = "Allow"
     protocol                   = "*"
     source_port_range          = "*"
-    destination_port_ranges     = ["445"]
+    destination_port_ranges    = ["445"]
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -385,10 +385,10 @@ resource "azurerm_network_security_group" "nsg-storage" {
     name                       = "smbstorageoutbound2internet"
     priority                   = 110
     direction                  = "Outbound"
-    access                     = "Allow"
+    access                     = "Deny"
     protocol                   = "*"
     source_port_range          = "*"
-    destination_port_ranges     = ["*"]
+    destination_port_range     = "*"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
