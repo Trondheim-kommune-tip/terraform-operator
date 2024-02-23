@@ -143,12 +143,15 @@ variable "azurerm_virtual_desktop_host_pool_registration_info_registrationinfo_t
 
 
 #############
+# storage
 ##############
-#variable "rg_stor" {
-#  type        = string
-#  default     = "rg-avd-storage"
-#  description = "Name of the Resource group in which to deploy storage"
-#}
+variable "storage_subnet_range" {
+  type        = string
+  default     = "10"
+  description = "Name of the storage subnet range"
+}
+
+
 
 
 ####################
