@@ -131,7 +131,7 @@ variable "vnet_range" {
 }
 variable "subnet_range" {
   type        = list(string)
-  default     = ["10.2.0.0/24"]
+  default     = ["10.1.1.0/24"]
   description = "Address range for session host subnet"
 }
 
@@ -146,9 +146,9 @@ variable "azurerm_virtual_desktop_host_pool_registration_info_registrationinfo_t
 # storage
 ##############
 variable "storage_subnet_range" {
-  type        = string
-  default     = "10"
-  description = "Name of the storage subnet range"
+  type        = list(string)
+  default     = ["10.1.2.0/24"]
+  description = "Address range for storage subnet"
 }
 
 
