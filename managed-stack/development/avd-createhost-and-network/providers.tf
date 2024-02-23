@@ -13,6 +13,8 @@ terraform {
 
 
 ## AD domains
+# it-con-01 AD domain controller access
+# useful for the section data "azuread_domains" "avd_domain"
 # Configure the Azure Active Directory Provider then only domain join worked. above RM was there.
 provider "azuread" {
   client_id     = "${var.arm_client_id}"       # 7b0a46b0-b657-422a-9e03-fb6818021ff6
@@ -37,11 +39,12 @@ provider "azurerm" {
 # it-con-01 AD domain controller access and role assignment using service principal
 ######
 # Configure the Azure Active Directory Provider
-# useful for the section data "azuread_domains" "avd_domain"
 # AD role assignment principal
 # AD network resource provider for peering need app reg service principles
 provider "azurerm" {
   features {}
+  client_id     = "667fe58f-3898-4c89-959e-a446c668376a" # sp for AD
+  client_secret = "${var.itcon01_rpa_adhub_secret}" # sp secret for rpa AD
   tenant_id     = "${var.arm_tenant_id}"            # 831195d3-b68b-433a-8687-4cdb1532958e
   subscription_id = "${var.ad_arm_subscription_id}" # 1fe8b9ee-48c3-4004-bc0a-d9eddc90d80f ad_arm_subscription_id
   alias = "siteAD"

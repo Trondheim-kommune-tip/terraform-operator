@@ -208,3 +208,13 @@ variable "aad_group_name" {
   default     = "Terraform-RPA"
   description = "Azure Active Directory Group for AVD users"
 }
+
+
+
+####
+# RPA
+variable "itcon01_rpa_adhub_secret" {
+  type = string
+  description = "azure RPA-AD client secret"
+  default = "id"
+}
