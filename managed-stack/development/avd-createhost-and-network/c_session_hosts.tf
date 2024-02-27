@@ -35,7 +35,7 @@ resource "azurerm_network_interface" "avd_vm_nic" {
 
   ip_configuration {
     name                          = "nic${count.index + 1}_config"
-    subnet_id                     = azurerm_subnet.subnet.id
+    subnet_id                     = "${azurerm_virtual_network.vnet.subnet.*.id[0]}"
     private_ip_address_allocation = "dynamic"
   }
 

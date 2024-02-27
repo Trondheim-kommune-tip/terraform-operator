@@ -22,33 +22,16 @@ resource "azurerm_virtual_network" "vnet" {
   location            = var.deploy_location
   resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"           #### rg-avd-resources 
 
-  #subnet {
-  #  name           = "default"
-  #  address_prefix = "10.1.1.0/24"
-  #  security_group = azurerm_network_security_group.nsg.id
-  #}
+  subnet {
+    name           = "default"
+    address_prefix = "10.1.1.0/24"
+    security_group = azurerm_network_security_group.nsg.id
+  }
 
   tags = {
     environment = "Production"
   }
   depends_on          = [azurerm_resource_group.rg]     #### rg-avd-compute
-}
-
-resource "azurerm_subnet_network_security_group_association" "subnet-nsg" {
-  subnet_id                 = azurerm_subnet.subnet.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-}
-
-resource "azurerm_subnet" "subnet" {
-  name                 = "${var.prefix}-subnet"
-  resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"           #### rg-avd-resources
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = var.subnet_range
-
-  depends_on          = [
-    azurerm_virtual_network.vnet,
-    azurerm_network_security_group.nsg
-  ]
 }
 
 resource "azurerm_network_security_group" "nsg" {
