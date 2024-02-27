@@ -75,11 +75,6 @@ resource "azurerm_network_security_group" "nsg" {
   depends_on = [azurerm_resource_group.rg]               #### rg-avd-compute
 }
 
-resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
-  subnet_id                 = azurerm_virtual_network.vnet.subnet.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-}
-
 
 ############
 ########
