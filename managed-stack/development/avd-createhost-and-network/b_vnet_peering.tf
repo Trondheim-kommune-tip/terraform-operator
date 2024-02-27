@@ -31,7 +31,6 @@ resource "azurerm_virtual_network" "vnet" {
   tags = {
     environment = "Production"
   }
-
   depends_on          = [azurerm_resource_group.rg]     #### rg-avd-compute
 }
 
