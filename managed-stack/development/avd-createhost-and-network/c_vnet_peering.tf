@@ -24,7 +24,7 @@ resource "azurerm_virtual_network" "vnet" {
 
   subnet {
     name           = "default"
-    address_prefix = var.subnet_range
+    address_prefix = "${var.subnet_range}"
     security_group = azurerm_network_security_group.nsg.id
   }
 
@@ -76,7 +76,7 @@ resource "azurerm_network_security_group" "nsg" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
-  subnet_id                 = azurerm_subnet.subnet.id
+  subnet_id                 = azurerm_virtual_network.vnet.subnet.id
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
