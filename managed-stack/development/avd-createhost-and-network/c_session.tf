@@ -45,7 +45,7 @@ resource "azurerm_network_security_group" "nsg" {
 #  virtual_network_name = azurerm_virtual_network.vnet.name
 #  address_prefixes     = var.subnet_range
 #  depends_on           = [azurerm_resource_group.rg]    #### rg-avd-compute
-}
+#}
 
 resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
   subnet_id                 = azurerm_subnet.subnet.id
