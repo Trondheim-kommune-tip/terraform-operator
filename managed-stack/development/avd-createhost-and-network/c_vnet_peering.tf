@@ -21,16 +21,18 @@ resource "azurerm_virtual_network" "vnet" {
   dns_servers         = var.dns_servers
   location            = var.deploy_location
   resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"           #### rg-avd-resources 
-  depends_on          = [azurerm_resource_group.rg]     #### rg-avd-compute
-}
 
-# subnet for VMs
-resource "azurerm_subnet" "subnet" {
-  name                 = "default"
-  resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = var.subnet_range
-  depends_on           = [azurerm_resource_group.rg]    #### rg-avd-compute
+  subnet {
+    name           = "default"
+    address_prefix = var.subnet_range
+    security_group = azurerm_network_security_group.example.id
+  }
+
+  tags = {
+    environment = "Production"
+  }
+
+  depends_on          = [azurerm_resource_group.rg]     #### rg-avd-compute
 }
 
 resource "azurerm_network_security_group" "nsg" {
