@@ -1,12 +1,3 @@
-# subnet for VMs
-resource "azurerm_subnet" "subnet" {
-  name                 = "default"
-  resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = var.subnet_range
-  depends_on           = [azurerm_resource_group.rg]    #### rg-avd-compute
-}
-
 resource "azurerm_network_security_group" "nsg" {
   name                = "${var.prefix}-NSG"
   location            = var.deploy_location
@@ -45,6 +36,15 @@ resource "azurerm_network_security_group" "nsg" {
     destination_address_prefix = "*"
   }
   depends_on = [azurerm_resource_group.rg]               #### rg-avd-compute
+}
+
+# subnet for VMs
+resource "azurerm_subnet" "subnet" {
+  name                 = "default"
+  resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = var.subnet_range
+  depends_on           = [azurerm_resource_group.rg]    #### rg-avd-compute
 }
 
 resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
