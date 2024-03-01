@@ -99,7 +99,7 @@ resource "azurerm_virtual_network_peering" "peer1" {
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
   # `allow_gateway_transit` must be set to false for vnet Global Peering
-  allow_gateway_transit        = false
+  # allow_gateway_transit        = false
 }
 
 # Peering the AD hub vnet to AVD network 
