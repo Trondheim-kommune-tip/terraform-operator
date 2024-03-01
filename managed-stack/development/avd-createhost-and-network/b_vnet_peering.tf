@@ -16,7 +16,7 @@
 ### avd desktop vnet. the Idea is to peer the Azure Virtual Desktop vnet with hub vnet
 ##############################################################
 resource "azurerm_virtual_network" "vnet" {
-  name                = "${var.prefix}-VNet"
+  name                = "${var.prefix}-VNet"  # avdtf-Vnet
   address_space       = var.vnet_range
   dns_servers         = var.dns_servers
   location            = var.deploy_location
@@ -91,10 +91,11 @@ data "azurerm_virtual_network" "ad_vnet_data" {
 }
 
 # Peering the Azure Virtual Desktop vnet with hub vnet of AAD DC 
+# avdtf-Vnet  ==> vnet-hub-noe-prod (AD vnet)
 resource "azurerm_virtual_network_peering" "peer1" {
   name                         = "peer_avdspoke_ad"
   resource_group_name          = var.rg_name                              # rg-avd-resources
-  virtual_network_name         = azurerm_virtual_network.vnet.name        # ${var.prefix}-VNet  vnet fir RPA/AVD subs
+  virtual_network_name         = azurerm_virtual_network.vnet.name        # avdtf-VNet  vnet fir RPA/AVD subs
   remote_virtual_network_id    = data.azurerm_virtual_network.ad_vnet_data.id   # AD vnet 
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
@@ -102,10 +103,11 @@ resource "azurerm_virtual_network_peering" "peer1" {
   # allow_gateway_transit        = false
 }
 
-# Peering the AD hub vnet to AVD network 
+# Peering the AD hub vnet to AVD network
+# vnet-hub-noe-prod ==> avdtf-Vnet (rpa net)
 resource "azurerm_virtual_network_peering" "peer2" {
   name                          = "peer_ad_avdspoke"
   resource_group_name           = var.ad_rg                                      # Rg-hubvnet-noe-prod of AD onprem/azure
-  virtual_network_name          = var.ad_vnet                                    # vnet-hub-noe-prodx of AD
+  virtual_network_name          = var.ad_vnet                                    # vnet-hub-noe-prod of AD
   remote_virtual_network_id     = azurerm_virtual_network.vnet.id                # local network vnet
 }
