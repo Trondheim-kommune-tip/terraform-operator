@@ -26,11 +26,11 @@ resource "azurerm_role_assignment" "role_dag" {
   principal_id       = data.azuread_group.aad_group.object_id
 }
 
-#resource "azurerm_role_assignment" "role_workspace" {
-#  scope              = "${var.azurerm_virtual_desktop_workspace_workspace_id}"
-#  role_definition_id = data.azurerm_role_definition.role.id
-#  principal_id       = data.azuread_group.aad_group.object_id
-#}
+resource "azurerm_role_assignment" "role_workspace" {
+  scope              = "${var.azurerm_virtual_desktop_workspace_workspace_id}"
+  role_definition_id = data.azurerm_role_definition.role.id
+  principal_id       = data.azuread_group.aad_group.object_id
+}
 
 resource "azurerm_role_assignment" "role_hostpool" {
   scope              = "${var.azure_virtual_desktop_host_pool_hostpool_id}"
