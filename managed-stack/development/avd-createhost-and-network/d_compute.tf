@@ -42,7 +42,7 @@ resource "azurerm_shared_image" "win11" {
     offer     = "office-365"
     #sku       = "20h2-evd-o365pp"
     #sku       = "win11-23h2-avd-m365"                    # win11 ent
-    sku       = "win11-21h2-avd-m365"
+    sku       = "win10-22h2-avd-m365-g2"
   }
 }
 
