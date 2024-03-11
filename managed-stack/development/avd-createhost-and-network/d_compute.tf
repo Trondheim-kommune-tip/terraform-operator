@@ -46,6 +46,22 @@ resource "azurerm_shared_image" "win11" {
   }
 }
 
+#Creates image definition
+resource "azurerm_shared_image_version" "version" {
+  name                = "0.0.1"
+  gallery_name        = azurerm_shared_image_gallery.sig.name
+  image_name          = azurerm_shared_image.win11.name
+  resource_group_name = azurerm_resource_group.sigrg.name
+  location            = azurerm_resource_group.sigrg.location
+  #managed_image_id    = data.azurerm_image.existing.id
+
+  target_region {
+    name                   = azurerm_resource_group.sigrg.location
+    regional_replica_count = 1
+    storage_account_type   = "Standard_LRS"
+  }
+}
+
 data "azurerm_shared_image" "win11" {
   name                = "avd-image"
   gallery_name        = "sig${random_string.random.id}"
