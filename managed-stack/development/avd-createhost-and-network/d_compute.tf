@@ -47,7 +47,7 @@ resource "azurerm_shared_image" "win11" {
 }
 
 data "azurerm_image" "win11image" {
-  name                = "search-api"
+  name                = "myPackerImage"
   resource_group_name = azurerm_resource_group.sigrg.name
 }
 
