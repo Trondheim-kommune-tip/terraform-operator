@@ -51,11 +51,17 @@ data "azurerm_image" "win11image" {
   resource_group_name = azurerm_resource_group.sigrg.name
 }
 
+data "azurerm_shared_image" "win11" {
+  name                = "avd-shared-image"
+  gallery_name        = "sig${random_string.random.id}"
+  resource_group_name = azurerm_resource_group.sigrg.name
+}
+
 #Creates image definition
 resource "azurerm_shared_image_version" "win11version" {
   name                = "0.0.1"
-  gallery_name        = azurerm_shared_image_gallery.sig.name
-  image_name          = azurerm_shared_image.win11.name
+  gallery_name        = data.azurerm_shared_image.win11.gallery_name
+  image_name          = data.azurerm_shared_image.win11.name
   resource_group_name = azurerm_resource_group.sigrg.name
   location            = azurerm_resource_group.sigrg.location
   managed_image_id    = data.azurerm_image.win11image.id
@@ -67,8 +73,3 @@ resource "azurerm_shared_image_version" "win11version" {
   }
 }
 
-data "azurerm_shared_image" "win11" {
-  name                = "avd-image"
-  gallery_name        = "sig${random_string.random.id}"
-  resource_group_name = azurerm_resource_group.sigrg.name
-}
