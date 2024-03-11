@@ -46,14 +46,19 @@ resource "azurerm_shared_image" "win11" {
   }
 }
 
+data "azurerm_image" "win11image" {
+  name                = "search-api"
+  resource_group_name = "packerimages"
+}
+
 #Creates image definition
-resource "azurerm_shared_image_version" "version" {
+resource "azurerm_shared_image_version" "win11version" {
   name                = "0.0.1"
   gallery_name        = azurerm_shared_image_gallery.sig.name
   image_name          = azurerm_shared_image.win11.name
   resource_group_name = azurerm_resource_group.sigrg.name
   location            = azurerm_resource_group.sigrg.location
-  #managed_image_id    = data.azurerm_image.existing.id
+  managed_image_id    = data.azurerm_image.win11image.id
 
   target_region {
     name                   = azurerm_resource_group.sigrg.location
