@@ -47,7 +47,7 @@ resource "azurerm_shared_image" "win11" {
 }
 
 data "azurerm_image" "win11image" {
-  name                = "myPackerImage"
+  name                = "avd-image"
   resource_group_name = azurerm_resource_group.sigrg.name
 }
 
