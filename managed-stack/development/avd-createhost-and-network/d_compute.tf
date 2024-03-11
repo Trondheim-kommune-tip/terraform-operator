@@ -48,7 +48,7 @@ resource "azurerm_shared_image" "win11" {
 
 data "azurerm_image" "win11image" {
   name                = "search-api"
-  resource_group_name = "packerimages"
+  resource_group_name = azurerm_resource_group.sigrg.name
 }
 
 #Creates image definition
