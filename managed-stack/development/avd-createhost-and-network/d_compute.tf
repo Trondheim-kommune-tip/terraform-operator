@@ -54,7 +54,7 @@ data "azurerm_shared_image" "win11" {
 
 ##### versioning 
 data "azurerm_image" "win11image" {
-  name                = "avd-image"
+  #name                = "avd-image"
   resource_group_name = azurerm_resource_group.sigrg.name
 }
 
