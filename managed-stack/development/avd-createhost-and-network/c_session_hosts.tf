@@ -64,13 +64,13 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
     disk_size_gb         = "150"
   }
 
-  source_image_reference {
-    publisher = "MicrosoftWindowsDesktop"
-    offer     = "office-365"
-    sku       = "win11-23h2-avd-m365"
-    version   = "latest"
-  }
-  #source_image_id = data.azurerm_shared_image.win11.id
+  #source_image_reference {
+  #  publisher = "MicrosoftWindowsDesktop"
+  #  offer     = "office-365"
+  #  sku       = "win11-23h2-avd-m365"
+  #  version   = "latest"
+  #}
+  source_image_id = data.azurerm_shared_image.win11.id
 
   depends_on = [
     azurerm_resource_group.rg,
