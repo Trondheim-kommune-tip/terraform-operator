@@ -47,12 +47,12 @@ resource "azurerm_shared_image" "win11" {
 }
 
 data "azurerm_image" "win11image" {
-  name                = "avd-image"
+  name                = "sigoo18/avd-image"
   resource_group_name = azurerm_resource_group.sigrg.name
 }
 
 data "azurerm_shared_image" "win11" {
-  name                = "avd-shared-image"
+  name                = azurerm_shared_image.win11.name
   gallery_name        = "sig${random_string.random.id}"
   resource_group_name = azurerm_resource_group.sigrg.name
 }
