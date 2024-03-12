@@ -61,7 +61,7 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
     name                 = "${lower(var.prefix)}-${count.index + 1}"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
-    disk_size_gb         = "100"
+    disk_size_gb         = "150"
   }
 
   source_image_reference {
