@@ -54,8 +54,10 @@ data "azurerm_shared_image" "win11" {
 
 ##### versioning 
 data "azurerm_image" "win11image" {
-  name_regex          = "^a"
+  name                = "/subscriptions/225e8bed-0445-4aa4-a9b7-a306aca77ad5/resourceGroups/rg-shared-resources/providers/Microsoft.Compute/galleries/sigoo18/images/avd-image"
+  #name_regex          = "^a"
   resource_group_name = azurerm_resource_group.sigrg.name
+  #sort_descending = true
 }
 
 #Creates image definition
