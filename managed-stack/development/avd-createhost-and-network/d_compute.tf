@@ -46,10 +46,10 @@ resource "azurerm_shared_image" "win11" {
   }
 }
 
-#data "azurerm_image" "win11image" {
-#  name                = "avd-image"
-#  resource_group_name = azurerm_resource_group.sigrg.name
-#}
+data "azurerm_image" "win11image" {
+  name                = "avd-image"
+  resource_group_name = azurerm_resource_group.sigrg.name
+}
 
 data "azurerm_shared_image" "win11" {
   name                = azurerm_shared_image.win11.name
@@ -58,18 +58,18 @@ data "azurerm_shared_image" "win11" {
 }
 
 #Creates image definition
-#resource "azurerm_shared_image_version" "win11version" {
-#  name                = "0.0.1"
-#  gallery_name        = data.azurerm_shared_image.win11.gallery_name
-#  image_name          = data.azurerm_shared_image.win11.name
-#  resource_group_name = azurerm_resource_group.sigrg.name
-#  location            = azurerm_resource_group.sigrg.location
-#  managed_image_id    = data.azurerm_image.win11image.id
+resource "azurerm_shared_image_version" "win11version" {
+  name                = "0.0.1"
+  gallery_name        = data.azurerm_shared_image.win11.gallery_name
+  image_name          = data.azurerm_shared_image.win11.name
+  resource_group_name = azurerm_resource_group.sigrg.name
+  location            = azurerm_resource_group.sigrg.location
+  managed_image_id    = data.azurerm_image.win11image.id
 
-#  target_region {
-#    name                   = azurerm_resource_group.sigrg.location
-#    regional_replica_count = 1
-#    storage_account_type   = "Standard_LRS"
-#  }
-#}
+  target_region {
+    name                   = azurerm_resource_group.sigrg.location
+    regional_replica_count = 1
+    storage_account_type   = "Standard_LRS"
+  }
+}
 
