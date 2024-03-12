@@ -53,12 +53,12 @@ data "azurerm_shared_image" "win11" {
 }
 
 ##### versioning 
-data "azurerm_image" "win11image" {
-  name                = "avd_image"
-  #name_regex          = "^a"
-  resource_group_name = azurerm_resource_group.sigrg.name
-  #sort_descending = true
-}
+#data "azurerm_image" "win11image" {
+#  name                = "avd_image"
+#  #name_regex          = "^a"
+#  resource_group_name = azurerm_resource_group.sigrg.name
+#  #sort_descending = true
+#}
 
 #Creates image definition
 resource "azurerm_shared_image_version" "win11version" {
@@ -67,7 +67,7 @@ resource "azurerm_shared_image_version" "win11version" {
   image_name          = data.azurerm_shared_image.win11.name
   resource_group_name = azurerm_resource_group.sigrg.name
   location            = azurerm_resource_group.sigrg.location
-  managed_image_id    = data.azurerm_image.win11image.id
+  #managed_image_id    = data.azurerm_image.win11image.id
 
   target_region {
     name                   = azurerm_resource_group.sigrg.location
