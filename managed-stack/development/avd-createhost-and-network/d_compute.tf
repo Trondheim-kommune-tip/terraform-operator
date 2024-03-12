@@ -76,3 +76,4 @@ resource "azurerm_shared_image_version" "win11version" {
   }
 }
 
+
