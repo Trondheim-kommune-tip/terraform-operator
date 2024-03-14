@@ -9,11 +9,11 @@ local_admin_password = "Avddesktop123$"
 vnet_range           = ["10.1.0.0/16"]
 subnet_range         = ["10.1.1.0/24"]
 storage_subnet_range = ["10.1.2.0/24"]
-dns_servers          = ["10.0.1.4", "168.63.129.16"]
+dns_servers          = ["10.0.1.4", "168.63.129.16", "10.68.5.5", "10.68.5.4"]
 #aad_group_name       = "Terraform-RPA"
 domain_name          = "tka.local"
 domain_user_upn      = "testcifs"     # do not include domain name as this is appended
-domain_password      = "tk1234"       # give dummy values here and pass by secret in spacelift stack. 
+domain_password      = "tk2006"       # give dummy values here and pass by secret in spacelift stack. 
 
 
 # hub network AAD Domain controllers. 
