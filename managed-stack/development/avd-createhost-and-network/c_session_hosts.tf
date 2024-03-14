@@ -30,8 +30,8 @@ resource "azurerm_resource_group" "rg" {
 resource "azurerm_public_ip" "avd_ext_ip" {
   count                   = var.rdsh_count
   name                    = "avd-ip-${count.index + 1}"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location                = azurerm_resource_group.rg.location
+  resource_group_name     = azurerm_resource_group.rg.name
   allocation_method       = "Dynamic"
   idle_timeout_in_minutes = 30
 
@@ -51,7 +51,7 @@ resource "azurerm_network_interface" "avd_vm_nic" {
     name                          = "nic${count.index + 1}_config"
     subnet_id                     = "${azurerm_virtual_network.vnet.subnet.*.id[0]}"
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = "${azurerm_public_ip.avd_ext_ip.id[count.index]}"
+    public_ip_address_id          = "${azurerm_public_ip.avd_ext_ip[count.index]}"
   }
 
   depends_on = [
