@@ -92,23 +92,29 @@ data "azurerm_virtual_network" "ad_vnet_data" {
 
 # Peering the Azure Virtual Desktop vnet with hub vnet of AAD DC 
 # avdtf-Vnet  ==> vnet-hub-noe-prod (AD vnet)
-#resource "azurerm_virtual_network_peering" "peer1" {
-#  name                         = "peer_avdspoke_ad"
-#  resource_group_name          = var.rg_name                              # rg-avd-resources
-#  virtual_network_name         = azurerm_virtual_network.vnet.name        # avdtf-VNet  vnet fir RPA/AVD subs
-#  remote_virtual_network_id    = data.azurerm_virtual_network.ad_vnet_data.id   # AD vnet 
-#  allow_virtual_network_access = true
-#  allow_forwarded_traffic      = true
-#  # `allow_gateway_transit` must be set to false for vnet Global Peering
-#  # allow_gateway_transit        = false
-#}
+resource "azurerm_virtual_network_peering" "peer1" {
+  #name                         = "peer_avdspoke_ad"
+  name                         = "peer-rpa-avdtfvnet-to-itcon1-vnethubnoeprod"
+  resource_group_name          = var.rg_name                              # rg-avd-resources
+  virtual_network_name         = azurerm_virtual_network.vnet.name        # avdtf-VNet  vnet fir RPA/AVD subs
+  remote_virtual_network_id    = data.azurerm_virtual_network.ad_vnet_data.id   # vnet-hub-noe-prod of AD
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
+  # `allow_gateway_transit` must be set to false for vnet Global Peering
+  allow_gateway_transit        = false
+  use_remote_gateways          = true
+}
 
 # Peering the AD hub vnet to AVD network
 # vnet-hub-noe-prod ==> avdtf-Vnet (rpa net)
-#resource "azurerm_virtual_network_peering" "peer2" {
-#  name                          = "peer_ad_avdspoke"
-#  resource_group_name           = var.ad_rg                                      # Rg-hubvnet-noe-prod of AD onprem/azure
-#  virtual_network_name          = var.ad_vnet                                    # vnet-hub-noe-prod of AD
-#  remote_virtual_network_id     = azurerm_virtual_network.vnet.id                # local network vnet
-#}
+resource "azurerm_virtual_network_peering" "peer2" {
+  #name                          = "peer_ad_avdspoke"
+  name                          = "peer-itcon1-vnethubnoeprod-to-rpa-avdtfvnet"
+  resource_group_name           = var.ad_rg                                      # Rg-hubvnet-noe-prod of AD onprem/azure
+  virtual_network_name          = var.ad_vnet                                    # vnet-hub-noe-prod of AD
+  remote_virtual_network_id     = azurerm_virtual_network.vnet.id                # local network vnet
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
+  allow_gateway_transit        = true
+}
 
