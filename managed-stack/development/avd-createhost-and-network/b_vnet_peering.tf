@@ -205,6 +205,7 @@ resource "azurerm_application_gateway" "gw-network" {
     unhealthy_threshold = 3
     protocol            = "Tcp"
     port                = 3389
+    path                = "/"
   }   
 
   http_listener {
