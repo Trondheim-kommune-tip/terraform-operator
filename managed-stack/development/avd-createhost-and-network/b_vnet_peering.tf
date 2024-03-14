@@ -113,9 +113,9 @@ resource "azurerm_virtual_network_peering" "peer2" {
   #name                          = "peer_ad_avdspoke"
   name                          = "peer-itcon1-vnethubnoeprod-to-rpa-avdtfvnet"
   #resource_group_name           = var.ad_rg                                      # Rg-hubvnet-noe-prod of AD onprem/azure
-  resource_group_name           = data.azurerm_resource_group.sitead.id
+  resource_group_name           = data.azurerm_resource_group.sitead.name
   #virtual_network_name          = var.ad_vnet                                    # vnet-hub-noe-prod of AD
-  virtual_network_name          = data.azurerm_virtual_network.ad_vnet_data.id
+  virtual_network_name          = data.azurerm_virtual_network.ad_vnet_data.name
   remote_virtual_network_id     = azurerm_virtual_network.vnet.id                # local network vnet
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
