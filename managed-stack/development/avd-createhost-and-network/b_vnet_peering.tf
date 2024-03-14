@@ -86,7 +86,7 @@ data "azurerm_resource_group" "site_ad" {
 
 data "azurerm_virtual_network" "ad_vnet_data" {
   name                = var.ad_vnet
-  resource_group_name = data.azurerm_resource_group.siteAD.name
+  resource_group_name = data.azurerm_resource_group.site_ad.name
   provider = azurerm.siteAD
 }
 
