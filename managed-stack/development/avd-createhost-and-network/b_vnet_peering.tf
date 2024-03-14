@@ -126,3 +126,100 @@ resource "azurerm_virtual_network_peering" "peer2" {
 
 
 #### 
+
+
+
+
+##### external IP app gateway with features on
+
+resource "azurerm_subnet" "extaccess-appgw" {
+  name                 = "extaccess-subnet"
+  resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.254.0.0/24"]
+}
+
+resource "azurerm_public_ip" "rpaexternalip" {
+  name                = "pip"
+  resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"
+  location            = var.deploy_location
+  allocation_method   = "Dynamic"
+}
+
+# since these variables are re-used - a locals block makes this more maintainable
+locals {
+  backend_address_pool_name      = "${azurerm_virtual_network.vnet.name}-beap"
+  frontend_port_name             = "${azurerm_virtual_network.vnet.name}-feport"
+  frontend_ip_configuration_name = "${azurerm_virtual_network.vnet.name}-feip"
+  http_setting_name              = "${azurerm_virtual_network.vnet.name}-be-htst"
+  listener_name                  = "${azurerm_virtual_network.vnet.name}-httplstn"
+  request_routing_rule_name      = "${azurerm_virtual_network.vnet.name}-rqrt"
+  redirect_configuration_name    = "${azurerm_virtual_network.vnet.name}-rdrcfg"
+  probe_name_app1                = "${azurerm_virtual_network.vnet.name}-probe"
+}
+
+
+resource "azurerm_application_gateway" "gw-network" {
+  name                = "rpa-appgateway"
+  resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"
+  location            = var.deploy_location
+
+  sku {
+    name     = "Standard_v2"
+    tier     = "Standard_v2"
+    capacity = 1
+  }
+
+  gateway_ip_configuration {
+    name      = "rpa-ip-configuration"
+    subnet_id = azurerm_subnet.extaccess-appgw.id
+  }
+
+  frontend_port {
+    name = local.frontend_port_name
+    port = 3389
+  }
+
+  frontend_ip_configuration {
+    name                 = local.frontend_ip_configuration_name
+    public_ip_address_id = azurerm_public_ip.rpaexternalip.id
+  }
+  
+  backend_address_pool {
+    name = local.backend_address_pool_name
+    ip_addresses = ["10.1.1.5"]
+  }
+
+  backend_http_settings {
+    name                  = local.http_setting_name
+    cookie_based_affinity = "Disabled"
+    port                  = 3389
+    protocol              = "Tcp"
+    request_timeout       = 60
+    probe_name            = local.probe_name_app1
+  }
+  probe {
+    name                = local.probe_name_app1
+    interval            = 60
+    timeout             = 30
+    unhealthy_threshold = 3
+    protocol            = "Tcp"
+    port                = 3389
+  }   
+
+  http_listener {
+    name                           = local.listener_name
+    frontend_ip_configuration_name = local.frontend_ip_configuration_name
+    frontend_port_name             = local.frontend_port_name
+    protocol                       = "Tcp"
+  }
+
+  request_routing_rule {
+    name                       = local.request_routing_rule_name
+    priority                   = 104
+    rule_type                  = "Basic"
+    http_listener_name         = local.listener_name
+    backend_address_pool_name  = local.backend_address_pool_name
+    backend_http_settings_name = local.http_setting_name
+  }
+}
