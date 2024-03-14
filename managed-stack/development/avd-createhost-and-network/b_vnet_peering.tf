@@ -120,5 +120,7 @@ resource "azurerm_virtual_network_peering" "peer2" {
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
   allow_gateway_transit        = true
+  provider = azurerm.siteAD
+  depends_on = [azurerm_virtual_network_peering.peer1]
 }
 
