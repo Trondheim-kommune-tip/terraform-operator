@@ -77,7 +77,7 @@ resource "azurerm_network_security_group" "nsg" {
 
 ############
 ########
-## IT-cont-01 hub vnet of AD domain network controller (remote) to peer to the local vnet
+## IT-con-01 hub vnet of AD domain network controller (remote) to peer to the local vnet
 # Azure resource group for site b which is AD
 data "azurerm_resource_group" "siteAD" {
   name     = var.ad_rg
@@ -89,6 +89,8 @@ data "azurerm_virtual_network" "ad_vnet_data" {
   resource_group_name = data.azurerm_resource_group.siteAD.name
   provider = azurerm.siteAD
 }
+
+# Jannik has added peering by enabling himself a Network Contributor role for RPA sub and it-con-01 subscription
 
 # Peering the Azure Virtual Desktop vnet with hub vnet of AAD DC 
 # avdtf-Vnet  ==> vnet-hub-noe-prod (AD vnet)
@@ -110,8 +112,10 @@ resource "azurerm_virtual_network_peering" "peer1" {
 resource "azurerm_virtual_network_peering" "peer2" {
   #name                          = "peer_ad_avdspoke"
   name                          = "peer-itcon1-vnethubnoeprod-to-rpa-avdtfvnet"
-  resource_group_name           = var.ad_rg                                      # Rg-hubvnet-noe-prod of AD onprem/azure
-  virtual_network_name          = var.ad_vnet                                    # vnet-hub-noe-prod of AD
+  #resource_group_name           = var.ad_rg                                      # Rg-hubvnet-noe-prod of AD onprem/azure
+  resource_group_name           = data.azurerm_resource_group.siteAD.id
+  #virtual_network_name          = var.ad_vnet                                    # vnet-hub-noe-prod of AD
+  virtual_network_name          = data.azurerm_virtual_network.ad_vnet_data.id
   remote_virtual_network_id     = azurerm_virtual_network.vnet.id                # local network vnet
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
