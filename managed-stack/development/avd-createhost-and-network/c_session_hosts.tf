@@ -26,6 +26,20 @@ resource "azurerm_resource_group" "rg" {
   location = var.resource_group_location
 }
 
+
+resource "azurerm_public_ip" "avd_ext_ip" {
+  count                   = var.rdsh_count
+  name                    = "avd-ip-${count.index + 1}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  allocation_method       = "Dynamic"
+  idle_timeout_in_minutes = 30
+
+  tags = {
+    environment = "avd IPs"
+  }
+}
+
 ###### NIC
 resource "azurerm_network_interface" "avd_vm_nic" {
   count               = var.rdsh_count
@@ -37,6 +51,7 @@ resource "azurerm_network_interface" "avd_vm_nic" {
     name                          = "nic${count.index + 1}_config"
     subnet_id                     = "${azurerm_virtual_network.vnet.subnet.*.id[0]}"
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = "${azurerm_public_ip.avd_ext_ip.id[count.index]}"
   }
 
   depends_on = [
@@ -78,6 +93,8 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
     azurerm_shared_image.win11
   ]
 }
+
+
 
 # get AD tenant domain name 
 # retrieves your primary Azure AD tenant domain. 
