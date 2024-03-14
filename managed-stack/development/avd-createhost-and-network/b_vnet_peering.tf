@@ -79,14 +79,14 @@ resource "azurerm_network_security_group" "nsg" {
 ########
 ## IT-con-01 hub vnet of AD domain network controller (remote) to peer to the local vnet
 # Azure resource group for site b which is AD
-data "azurerm_resource_group" "site_ad" {
+data "azurerm_resource_group" "sitead" {
   name     = var.ad_rg
   provider = azurerm.siteAD
 }
 
 data "azurerm_virtual_network" "ad_vnet_data" {
   name                = var.ad_vnet
-  resource_group_name = data.azurerm_resource_group.site_ad.name
+  resource_group_name = data.azurerm_resource_group.sitead.name
   provider = azurerm.siteAD
 }
 
@@ -113,7 +113,7 @@ resource "azurerm_virtual_network_peering" "peer2" {
   #name                          = "peer_ad_avdspoke"
   name                          = "peer-itcon1-vnethubnoeprod-to-rpa-avdtfvnet"
   #resource_group_name           = var.ad_rg                                      # Rg-hubvnet-noe-prod of AD onprem/azure
-  resource_group_name           = data.azurerm_resource_group.site_ad.id
+  resource_group_name           = data.azurerm_resource_group.sitead.id
   #virtual_network_name          = var.ad_vnet                                    # vnet-hub-noe-prod of AD
   virtual_network_name          = data.azurerm_virtual_network.ad_vnet_data.id
   remote_virtual_network_id     = azurerm_virtual_network.vnet.id                # local network vnet
