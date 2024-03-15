@@ -6,27 +6,6 @@ resource "azurerm_user_assigned_identity" "mssql" {
   resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"
 }
 
-#resource "azurerm_subnet" "mssql" {
-#  name                 = "mssql-subnet"
-#  resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
-#  virtual_network_name = azurerm_virtual_network.vnet.name
-#  address_prefixes     = ["10.1.2.0/24"]
-#  delegation {
-#    name = "delegation"
-#
-#    service_delegation {
-#      name    = "Microsoft.Sql/managedInstances"
-#      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action", "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action"]
-#    }
-#  }
-#  #service_endpoints    = ["Microsoft.Sql"]
-#}
-
-#resource "azurerm_subnet_network_security_group_association" "mssql" {
-#  subnet_id                 = azurerm_subnet.mssql.id
-#  network_security_group_id = azurerm_network_security_group.nsg.id
-#}
-
 
 resource "azurerm_mssql_server" "mssql" {
   name                         = "mssql-resource"
