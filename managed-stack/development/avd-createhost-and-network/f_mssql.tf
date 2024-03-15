@@ -1,3 +1,5 @@
+data "azurerm_client_config" "current" {}
+
 resource "azurerm_user_assigned_identity" "mssql" {
   name                = "mssql-admin"
   location            = var.deploy_location
