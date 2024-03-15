@@ -29,6 +29,27 @@ resource "azurerm_mssql_server" "mssql" {
   transparent_data_encryption_key_vault_key_id = azurerm_key_vault_key.mssql.id
 }
 
+resource "azurerm_mssql_database" "db" {
+  name      = var.sql_db_name
+  server_id = azurerm_mssql_server.mssql.id
+  collation      = "SQL_Latin1_General_CP1_CI_AS"
+  license_type   = "LicenseIncluded"
+  max_size_gb    = 50
+  read_scale     = true
+  sku_name       = "S0"
+  zone_redundant = true
+  enclave_type   = "VBS"
+
+  tags = {
+    db = "rpa"
+  }
+
+  # prevent the possibility of accidental data loss
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
 # Create a key vault with access policies which allow for the current user to get, list, create, delete, update, recover, purge and getRotationPolicy for the key vault key and also add a key vault access policy for the Microsoft Sql Server instance User Managed Identity to get, wrap, and unwrap key(s)
 resource "azurerm_key_vault" "mssql" {
   name                        = "mssqltde"

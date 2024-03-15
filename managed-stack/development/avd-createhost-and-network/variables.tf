@@ -79,11 +79,6 @@ variable "local_admin_password" {
 
 
 
-
-
-
-
-
 ########################
 ### avd desktop vnet, NIC, session host
 ########################
@@ -151,6 +146,13 @@ variable "storage_subnet_range" {
   description = "Address range for storage subnet"
 }
 
+
+#### sql_db
+variable "sql_db_name" {
+  type        = string
+  default     = "rpadb"
+  description = "rpa mssql db"
+}
 
 
 
