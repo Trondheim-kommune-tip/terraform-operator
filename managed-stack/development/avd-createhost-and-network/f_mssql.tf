@@ -16,7 +16,7 @@ resource "azurerm_virtual_network" "mssql-vnet" {
 resource "azurerm_subnet" "mssql" {
   name                 = "mssql-subnet"
   resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
-  virtual_network_name = azurerm_virtual_network.mssql.name
+  virtual_network_name = azurerm_virtual_network.mssql-vnet.name
   address_prefixes     = ["11.1.1.0/24"]
 
   delegation {
