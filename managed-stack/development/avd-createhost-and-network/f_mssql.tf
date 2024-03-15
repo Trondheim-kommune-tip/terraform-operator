@@ -37,7 +37,7 @@ resource "azurerm_mssql_database" "db" {
   max_size_gb    = 50
   read_scale     = true
   sku_name       = "S0"
-  zone_redundant = true
+  zone_redundant = false
   enclave_type   = "VBS"
 
   tags = {
