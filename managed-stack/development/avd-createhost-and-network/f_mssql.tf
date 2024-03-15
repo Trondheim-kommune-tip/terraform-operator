@@ -22,10 +22,10 @@ resource "azurerm_user_assigned_identity" "mssql" {
 #  #service_endpoints    = ["Microsoft.Sql"]
 #}
 
-resource "azurerm_subnet_network_security_group_association" "mssql" {
-  subnet_id                 = azurerm_subnet.mssql.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-}
+#resource "azurerm_subnet_network_security_group_association" "mssql" {
+#  subnet_id                 = azurerm_subnet.mssql.id
+#  network_security_group_id = azurerm_network_security_group.nsg.id
+#}
 
 resource "azurerm_mssql_server" "mssql" {
   name                         = "mssql-resource"
