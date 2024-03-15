@@ -10,7 +10,7 @@ resource "azurerm_subnet" "mssql" {
   name                 = "mssql-subnet"
   resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.2.1.0/24"]
+  address_prefixes     = ["10.1.2.0/24"]
   service_endpoints    = ["Microsoft.Sql"]
 }
 
