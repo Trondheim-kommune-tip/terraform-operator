@@ -6,7 +6,6 @@ resource "azurerm_user_assigned_identity" "mssql" {
   resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"
 }
 
-
 resource "azurerm_mssql_server" "mssql" {
   name                         = "mssql-resource"
   resource_group_name          = "${var.azure_virtual_desktop_compute_resource_group}"
