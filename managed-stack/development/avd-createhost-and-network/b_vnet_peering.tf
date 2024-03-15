@@ -27,6 +27,11 @@ resource "azurerm_virtual_network" "vnet" {
     address_prefix = "10.1.1.0/24"
     security_group = azurerm_network_security_group.nsg.id
   }
+  subnet {
+    name           = "mssql"
+    address_prefix = "10.2.1.0/24"
+    security_group = azurerm_network_security_group.nsg.id
+  }
 
   tags = {
     environment = "Production"
