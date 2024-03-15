@@ -30,8 +30,8 @@ resource "azurerm_mssql_server" "mssql" {
 # Create a key vault with access policies which allow for the current user to get, list, create, delete, update, recover, purge and getRotationPolicy for the key vault key and also add a key vault access policy for the Microsoft Sql Server instance User Managed Identity to get, wrap, and unwrap key(s)
 resource "azurerm_key_vault" "mssql" {
   name                        = "mssqltde"
-  location                    = azurerm_resource_group.mssql.location
-  resource_group_name         = azurerm_resource_group.mssql.name
+  location                    = var.deploy_location
+  resource_group_name         = "${var.azure_virtual_desktop_compute_resource_group}"
   enabled_for_disk_encryption = true
   tenant_id                   = azurerm_user_assigned_identity.mssql.tenant_id
   soft_delete_retention_days  = 7
