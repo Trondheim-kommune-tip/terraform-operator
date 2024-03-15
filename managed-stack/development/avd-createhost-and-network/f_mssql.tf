@@ -27,6 +27,7 @@ resource "azurerm_user_assigned_identity" "mssql" {
 #  network_security_group_id = azurerm_network_security_group.nsg.id
 #}
 
+
 resource "azurerm_mssql_server" "mssql" {
   name                         = "mssql-resource"
   resource_group_name          = "${var.azure_virtual_desktop_compute_resource_group}"
