@@ -6,6 +6,14 @@ resource "azurerm_user_assigned_identity" "mssql" {
   resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"
 }
 
+resource "azurerm_subnet" "mssql" {
+  name                 = "mssql-subnet"
+  resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.7.29.0/29"]
+  service_endpoints    = ["Microsoft.Sql"]
+}
+
 resource "azurerm_mssql_server" "mssql" {
   name                         = "mssql-resource"
   resource_group_name          = "${var.azure_virtual_desktop_compute_resource_group}"
@@ -29,7 +37,13 @@ resource "azurerm_mssql_server" "mssql" {
   transparent_data_encryption_key_vault_key_id = azurerm_key_vault_key.mssql.id
 }
 
-resource "azurerm_mssql_database" "db" {
+resource "azurerm_mssql_virtual_network_rule" "mssql" {
+  name      = "sql-vnet-rule"
+  server_id = azurerm_mssql_server.mssql.id
+  subnet_id = azurerm_subnet.mssql.id
+}
+
+resource "azurerm_mssql_database" "mssql" {
   name      = var.sql_db_name
   server_id = azurerm_mssql_server.mssql.id
   collation      = "SQL_Latin1_General_CP1_CI_AS"
