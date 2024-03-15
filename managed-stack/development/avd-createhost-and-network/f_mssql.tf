@@ -10,8 +10,13 @@ resource "azurerm_subnet" "mssql" {
   name                 = "mssql-subnet"
   resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.1.1.80/29"]
+  address_prefixes     = ["10.1.0.80/29"]
   service_endpoints    = ["Microsoft.Sql"]
+}
+
+resource "azurerm_subnet_network_security_group_association" "mssql" {
+  subnet_id                 = azurerm_subnet.mssql.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
 resource "azurerm_mssql_server" "mssql" {
