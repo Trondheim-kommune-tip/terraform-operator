@@ -35,7 +35,7 @@ resource "azurerm_mssql_database" "db" {
   collation      = "SQL_Latin1_General_CP1_CI_AS"
   license_type   = "LicenseIncluded"
   max_size_gb    = 50
-  read_scale     = true
+  read_scale     = false
   sku_name       = "S0"
   zone_redundant = false
   enclave_type   = "VBS"
@@ -43,6 +43,13 @@ resource "azurerm_mssql_database" "db" {
   tags = {
     db = "rpa"
   }
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.mssql.id]
+  }
+
+  transparent_data_encryption_key_vault_key_id = azurerm_key_vault_key.mssql.id
+
 
   # prevent the possibility of accidental data loss
   lifecycle {
