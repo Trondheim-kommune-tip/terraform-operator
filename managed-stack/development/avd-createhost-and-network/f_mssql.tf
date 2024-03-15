@@ -6,6 +6,41 @@ resource "azurerm_user_assigned_identity" "mssql" {
   resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"
 }
 
+resource "azurerm_virtual_network" "mssql" {
+  name                = "mssql-vnet"
+  address_space       = ["11.1.0.0/16"]
+  location            = var.deploy_location
+  resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"
+}
+
+resource "azurerm_subnet" "mssql" {
+  name                 = "mssql-subnet"
+  resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
+  virtual_network_name = azurerm_virtual_network.mssql.name
+  address_prefixes     = ["11.1.1.0/24"]
+
+  delegation {
+    name = "delegation"
+
+    service_delegation {
+      name    = "Microsoft.Sql/managedInstances"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action", "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action"]
+    }
+    service_delegation {
+      name    = "Microsoft.Sql/managedInstancesStage"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action", "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action"]
+    }
+    service_delegation {
+      name    = "Microsoft.Sql/managedInstancesTest"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action", "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action"]
+    }
+    service_delegation {
+      name    = "Microsoft.Sql/servers"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action", "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action"]
+    }
+  }
+}
+
 resource "azurerm_mssql_server" "mssql" {
   name                         = "mssql-resource"
   resource_group_name          = "${var.azure_virtual_desktop_compute_resource_group}"
@@ -32,7 +67,7 @@ resource "azurerm_mssql_server" "mssql" {
 resource "azurerm_mssql_virtual_network_rule" "mssql" {
   name      = "sql-vnet-rule"
   server_id = azurerm_mssql_server.mssql.id
-  subnet_id = "${azurerm_virtual_network.vnet.subnet.*.id[0]}"
+  subnet_id = "${azurerm_virtual_network.mssql.mssql.*.id[0]}"
 }
 
 resource "azurerm_mssql_database" "mssql" {
