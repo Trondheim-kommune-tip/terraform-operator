@@ -6,7 +6,7 @@ resource "azurerm_user_assigned_identity" "mssql" {
   resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"
 }
 
-resource "azurerm_virtual_network" "mssql" {
+resource "azurerm_virtual_network" "mssql-vnet" {
   name                = "mssql-vnet"
   address_space       = ["11.1.0.0/16"]
   location            = var.deploy_location
@@ -24,18 +24,6 @@ resource "azurerm_subnet" "mssql" {
 
     service_delegation {
       name    = "Microsoft.Sql/managedInstances"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action", "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action"]
-    }
-    service_delegation {
-      name    = "Microsoft.Sql/managedInstancesStage"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action", "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action"]
-    }
-    service_delegation {
-      name    = "Microsoft.Sql/managedInstancesTest"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action", "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action"]
-    }
-    service_delegation {
-      name    = "Microsoft.Sql/servers"
       actions = ["Microsoft.Network/virtualNetworks/subnets/join/action", "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action"]
     }
   }
@@ -67,7 +55,7 @@ resource "azurerm_mssql_server" "mssql" {
 resource "azurerm_mssql_virtual_network_rule" "mssql" {
   name      = "sql-vnet-rule"
   server_id = azurerm_mssql_server.mssql.id
-  subnet_id = "${azurerm_virtual_network.mssql.mssql.*.id[0]}"
+  subnet_id = azurerm_subnet.mssql.id
 }
 
 resource "azurerm_mssql_database" "mssql" {
