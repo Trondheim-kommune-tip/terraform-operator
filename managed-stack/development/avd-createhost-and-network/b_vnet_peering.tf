@@ -21,18 +21,11 @@ resource "azurerm_virtual_network" "vnet" {
   dns_servers         = var.dns_servers
   location            = var.deploy_location
   resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"           #### rg-avd-resources 
-
   subnet {
     name           = "default"
     address_prefix = "10.1.1.0/24"
     security_group = azurerm_network_security_group.nsg.id
   }
-  subnet {
-    name           = "mssql"
-    address_prefix = "10.2.1.0/24"
-    security_group = azurerm_network_security_group.nsg.id
-  }
-
   tags = {
     environment = "Production"
   }
