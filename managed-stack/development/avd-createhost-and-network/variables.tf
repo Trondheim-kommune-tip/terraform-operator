@@ -18,7 +18,7 @@ variable "rg" {
 variable "rdsh_count" {
   description = "Number of AVD machines to deploy"
   //default     = 2
-  default     = 3
+  default     = 4
 }
 
 variable "prefix" {
