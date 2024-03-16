@@ -88,7 +88,6 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
   admin_username        = var.local_admin_username
   admin_password        = var.local_admin_password
   capacity_reservation_group_id = azurerm_capacity_reservation_group.avd_vm_cap_group.id
-  zone                  = "1"
 
   os_disk {
     name                 = "${lower(var.prefix)}-${count.index + 1}"
