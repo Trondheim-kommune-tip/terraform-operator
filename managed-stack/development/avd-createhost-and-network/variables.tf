@@ -57,7 +57,8 @@ variable "azure_virtual_desktop_host_pool_name" {
 variable "vm_size" {
   description = "Size of the machine to deploy"
   // default     = "Standard_DS2_v2"
-  default     = "Standard_D4s_v5"
+  // default     = "Standard_D4s_v5"
+  default     = "Standard_D4ls_v5"
 }
 
 variable "ou_path" {
