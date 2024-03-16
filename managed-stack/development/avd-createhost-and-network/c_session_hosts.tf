@@ -59,6 +59,22 @@ resource "azurerm_network_interface" "avd_vm_nic" {
   ]
 }
 
+resource "azurerm_capacity_reservation_group" "avd_vm_cap_group" {
+  name                = "avd-capacity-reservation-group"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+}
+
+resource "azurerm_capacity_reservation" "avd_vm_cap_res" {
+  name                          = "avd-capacity-reservation"
+  capacity_reservation_group_id = azurerm_capacity_reservation_group.avd_vm_cap_group.id
+  sku {
+    name     = var.vm_size # "Standard_D4ls_v5"
+    capacity = 3
+  }
+}
+
+
 #virtual machine
 # VMs
 resource "azurerm_windows_virtual_machine" "avd_vm" {
@@ -71,6 +87,7 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
   provision_vm_agent    = true
   admin_username        = var.local_admin_username
   admin_password        = var.local_admin_password
+  capacity_reservation_group_id = azurerm_capacity_reservation.avd_vm_cap_res.id
 
   os_disk {
     name                 = "${lower(var.prefix)}-${count.index + 1}"
