@@ -18,15 +18,7 @@ resource "azurerm_subnet" "mssql" {
   resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
   virtual_network_name = azurerm_virtual_network.mssql-vnet.name
   address_prefixes     = ["11.1.1.0/24"]
-
-  delegation {
-    name = "delegation"
-
-    service_delegation {
-      name    = "Microsoft.Sql/managedInstances"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action", "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action"]
-    }
-  }
+  service_endpoints    = ["Microsoft.Sql"]
 }
 
 resource "azurerm_mssql_server" "mssql" {
