@@ -46,7 +46,6 @@ resource "azurerm_network_interface" "avd_vm_nic" {
   name                = "${var.prefix}-${count.index + 1}-nic"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  edge_zone           = "1"
 
   ip_configuration {
     name                          = "nic${count.index + 1}_config"
