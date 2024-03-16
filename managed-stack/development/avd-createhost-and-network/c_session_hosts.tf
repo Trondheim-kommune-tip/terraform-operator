@@ -63,13 +63,11 @@ resource "azurerm_capacity_reservation_group" "avd_vm_cap_group" {
   name                = "avd-capacity-reservation-group"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  zones               = ["1", "2", "3"]
 }
 
 resource "azurerm_capacity_reservation" "avd_vm_cap_res" {
   name                          = "avd-capacity-reservation"
   capacity_reservation_group_id = azurerm_capacity_reservation_group.avd_vm_cap_group.id
-  zone                          = "1"
   sku {
     name     = var.vm_size # "Standard_D4ls_v5"
     capacity = 3
