@@ -141,6 +141,8 @@ PROTECTED_SETTINGS
 }
 
 # EXT-2 vm ext Number of AVD machines to deploy
+# to provide post deployment configuration and run automated tasks
+# associated VMs to hostpool
 resource "azurerm_virtual_machine_extension" "vmext_dsc" {
   count                      = var.rdsh_count
   name                       = "${var.prefix}${count.index + 1}-avd_dsc"

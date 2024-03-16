@@ -21,6 +21,11 @@ resource "azurerm_subnet" "mssql" {
   service_endpoints    = ["Microsoft.Sql"]
 }
 
+resource "azurerm_subnet_network_security_group_association" "example" {
+  subnet_id                 = azurerm_subnet.mssql.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
+}
+
 resource "azurerm_mssql_server" "mssql" {
   name                         = "mssql-resource"
   resource_group_name          = "${var.azure_virtual_desktop_compute_resource_group}"
