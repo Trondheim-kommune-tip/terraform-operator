@@ -48,13 +48,24 @@ resource "azurerm_network_security_group" "nsg" {
     destination_address_prefix = "*"
   }
   security_rule {
-    name                       = "appserver2dbnclients"
+    name                       = "appserver2db"
     priority                   = 1002
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_ranges     = ["1433-1434","8181","10000","1001-1002"]
+    destination_port_ranges     = ["1433-1434"]
+    source_address_prefix      = "10.1.1.0/24"
+    destination_address_prefix = "*"
+  }
+  security_rule {
+    name                       = "appserver2clients"
+    priority                   = 1003
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_ranges     = ["8181","10000","1001-1002"]
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
