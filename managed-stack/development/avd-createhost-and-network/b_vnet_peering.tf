@@ -54,9 +54,9 @@ resource "azurerm_network_security_group" "nsg" {
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_ranges     = ["1433-1434"]
-    source_address_prefix      = "10.1.1.0/24"
-    destination_address_prefix = "*"
+    destination_port_ranges    = ["1433-1434"]
+    source_address_prefix      = [\"10.1.1.0/24\"]
+    destination_address_prefix = [\"11.1.1.0/24\"]
   }
   security_rule {
     name                       = "appserver2clients"
@@ -71,7 +71,7 @@ resource "azurerm_network_security_group" "nsg" {
   }
   security_rule {
     name                       = "clients2appserver"
-    priority                   = 1003
+    priority                   = 1004
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
