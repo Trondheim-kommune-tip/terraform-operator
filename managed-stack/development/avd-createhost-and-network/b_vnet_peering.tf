@@ -56,7 +56,7 @@ resource "azurerm_network_security_group" "nsg" {
     source_port_range          = "*"
     destination_port_ranges    = ["1433-1434"]
     source_address_prefix      = ["10.1.1.0/24"]
-    destination_address_prefix = ["11.1.1.0/24"]
+    destination_address_prefix = "11.1.1.0/24"
   }
   security_rule {
     name                       = "appserver2clients"
