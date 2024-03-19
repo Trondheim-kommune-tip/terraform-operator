@@ -205,8 +205,8 @@ SETTINGS
   }
 PROTECTED_SETTINGS
 
-  depends_on = [
-    azurerm_virtual_machine_extension.domain_join
-  ]
+  #depends_on = [
+  #  azurerm_virtual_machine_extension.domain_join
+  #]
 }
 
