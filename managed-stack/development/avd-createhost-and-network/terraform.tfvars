@@ -28,3 +28,5 @@ ad_rg                = "rg-hubvnet-noe-prod"
 #  "robot.roger.robot.roger@trondheim.kommune.no",
 #  "caroline.skram.by@trondheim.kommune.no",
 #  "kitti.lai@trondheim.kommune.no"
+
+# "User": "${var.domain_user_upn}@${var.domain_name}",
