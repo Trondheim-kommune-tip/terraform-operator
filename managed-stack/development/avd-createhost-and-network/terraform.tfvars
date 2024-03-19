@@ -14,7 +14,7 @@ dns_servers          = ["10.0.1.4", "168.63.129.16", "10.68.5.5", "10.68.5.4", "
 domain_name          = "tka.local"
 domain_user_upn      = "testcifs"     # do not include domain name as this is appended
 domain_password      = "tk2006"       # give dummy values here and pass by secret in spacelift stack. 
-ou_path              = "OU=Servers,DC=tk,DC=local",
+ou_path              = "OU=Servers,DC=tk,DC=local"
 
 
 # hub network AAD Domain controllers. 
