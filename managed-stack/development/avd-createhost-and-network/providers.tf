@@ -19,7 +19,7 @@ terraform {
 provider "azuread" {
   client_id     = "${var.arm_client_id}"       # 7b0a46b0-b657-422a-9e03-fb6818021ff6
   client_secret = "${var.arm_client_secret}"   # see lastpass ends with qcnc
-  tenant_id = "${var.arm_tenant_id}"           # 831195d3-b68b-433a-8687-4cdb1532958e
+  tenant_id     = "${var.arm_tenant_id}"           # 831195d3-b68b-433a-8687-4cdb1532958e
 }
 
 
