@@ -133,40 +133,40 @@ data "azuread_domains" "avd_domain" {
 }
 
 # EXT-1 domain join ( see output)
-resource "azurerm_virtual_machine_extension" "domain_join" {
-  count                      = var.rdsh_count
-  name                       = "${var.prefix}-${count.index + 1}-domainJoin"
-  virtual_machine_id         = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
-  publisher                  = "Microsoft.Compute"
-  type                       = "JsonADDomainExtension"
-  type_handler_version       = "1.3"
-  auto_upgrade_minor_version = true
+#resource "azurerm_virtual_machine_extension" "domain_join" {
+#  count                      = var.rdsh_count
+#  name                       = "${var.prefix}-${count.index + 1}-domainJoin"
+#  virtual_machine_id         = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
+#  publisher                  = "Microsoft.Compute"
+#  type                       = "JsonADDomainExtension"
+#  type_handler_version       = "1.3"
+#  auto_upgrade_minor_version = true
 
-  settings = <<SETTINGS
-    {
-      "Name": "${var.domain_name}",
-      "OUPath": "${var.ou_path}",
-      "User": "${var.domain_name}\\${var.domain_user_upn}",
-      "Restart": "true",
-      "Options": "3"
-    }
-SETTINGS
+#  settings = <<SETTINGS
+#    {
+#      "Name": "${var.domain_name}",
+#      "OUPath": "${var.ou_path}",
+#      "User": "${var.domain_name}\\${var.domain_user_upn}",
+#      "Restart": "true",
+#      "Options": "3"
+#    }
+#SETTINGS
 
-  protected_settings = <<PROTECTED_SETTINGS
-    {
-      "Password": "${var.domain_password}"
-    }
-PROTECTED_SETTINGS
+#  protected_settings = <<PROTECTED_SETTINGS
+#    {
+#      "Password": "${var.domain_password}"
+#    }
+#PROTECTED_SETTINGS
 
-  lifecycle {
-    ignore_changes = [settings, protected_settings]
-  }
+#  lifecycle {
+#    ignore_changes = [settings, protected_settings]
+#  }
 
-  depends_on = [
-    azurerm_virtual_network_peering.peer1,
-    azurerm_virtual_network_peering.peer2
-  ]
-}
+#  depends_on = [
+#    azurerm_virtual_network_peering.peer1,
+#    azurerm_virtual_network_peering.peer2
+#  ]
+#}
 
 # EXT-2 vm ext Number of AVD machines to deploy
 # to provide post deployment configuration and run automated tasks
