@@ -11,6 +11,7 @@ subnet_range         = ["10.1.1.0/24"]
 storage_subnet_range = ["10.1.2.0/24"]
 dns_servers          = ["10.0.1.4", "168.63.129.16", "10.68.5.5", "10.68.5.4", "10.68.0.61", "10.68.0.58"]
 #aad_group_name       = "Terraform-RPA"
+#aad_group_name_avd   = "AVDUsers"
 domain_name          = "tka.local"
 domain_user_upn      = "testcifs"     # do not include domain name as this is appended
 domain_password      = "tk2006"       # give dummy values here and pass by secret in spacelift stack. 
@@ -21,12 +22,11 @@ ou_path              = "OU=TK-Cloud,OU=Servers,DC=tka,DC=local"
 ad_vnet              = "vnet-hub-noe-prod"
 ad_rg                = "rg-hubvnet-noe-prod"
 #avd_users = [
-#  "Mikal.Rekdal@trondheim.kommune.no",
-#  "sarumathy.soosaipillai@trondheim.kommune.no",
-#  "Sebastian.S.Eide@trondheim.kommune.no",
-#  "alok.hom@trondheim.kommune.no",
 #  "robot.roger.robot.roger@trondheim.kommune.no",
-#  "caroline.skram.by@trondheim.kommune.no",
-#  "kitti.lai@trondheim.kommune.no"
+#  "runtimeserver1@trondheim.kommune.no",
+#  "appserver1@trondheim.kommune.no",
+#  "imageserver1@trondheim.kommune.no",
+#  "reportingserver1@trondheim.kommune.no"
+#]
 
 # "User": "${var.domain_user_upn}@${var.domain_name}",
