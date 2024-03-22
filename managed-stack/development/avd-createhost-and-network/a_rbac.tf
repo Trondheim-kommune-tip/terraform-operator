@@ -18,7 +18,7 @@ data "azurerm_role_definition" "role_session_host" {
 
 # View Virtual Machines in the portal and login as a regular user.
 data "azurerm_role_definition" "role_viewonportal_nd_login" { 
-  name = " "Virtual Machine User Login"
+  name = "Virtual Machine User Login"
 }
 
 # resource "azuread_group" "aad_group" was earlier
