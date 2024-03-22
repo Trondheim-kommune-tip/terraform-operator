@@ -22,10 +22,10 @@ data "azurerm_role_definition" "role_viewonportal_nd_login" {
 }
 
 # resource "azuread_group" "aad_group" was earlier
-#data "azuread_group" "aad_group" {
-#  display_name     = var.aad_group_name
-#  security_enabled = true
-#}
+data "azuread_group" "aad_group" {
+  display_name     = var.aad_group_name
+  security_enabled = true
+}
 
 #data "azuread_user" "aad_user" {
 #  for_each            = toset(var.avd_users)
