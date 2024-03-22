@@ -49,11 +49,11 @@ data "azuread_user" "robot" {
 #  member_object_id = each.value["id"]
 #}
 
-resource "azurerm_role_assignment" "role_useraccount" {
-  scope              = data.azuread_user.aad_user.object_id
-  role_definition_id = data.azurerm_role_definition.role_viewonportal_nd_login.id
-  principal_id       = data.azuread_group.aad_group.object_id
-}
+#resource "azurerm_role_assignment" "role_useraccount" {
+#  scope              = data.azuread_user.aad_user.object_id
+#  role_definition_id = data.azurerm_role_definition.role_viewonportal_nd_login.id
+#  principal_id       = data.azuread_group.aad_group.object_id
+#}
 
 resource "azurerm_role_assignment" "role_dag" {
   scope              = "${var.azurerm_virtual_desktop_application_group_dag_id}"
