@@ -22,38 +22,39 @@ data "azurerm_role_definition" "role_viewonportal_nd_login" {
 }
 
 # resource "azuread_group" "aad_group" was earlier
-data "azuread_group" "aad_group" {
-  display_name     = var.aad_group_name
-  security_enabled = true
-}
-
-#data "azuread_user" "aad_user" {
-#  for_each            = toset(var.avd_users)
-#  user_principal_name = format("%s", each.key)
-#  password            = "Avdaccess123@"
-#}
-
-data "azuread_user" "robot" {
-  user_principal_name = "robot.roger.robot.roger@trondheim.kommune.no"
-}
-
-#resource "azuread_group" "aad_group" {
-#  display_name     = var.aad_group_name_avd
+#data "azuread_group" "aad_group" {
+#  display_name     = var.aad_group_name
 #  security_enabled = true
-#  provider = azuread.rpa
 #}
 
-#resource "azuread_group_member" "aad_group_member" {
-#  for_each         = data.azuread_user.aad_user
-#  group_object_id  = azuread_group.aad_group.id
-#  member_object_id = each.value["id"]
+resource "azuread_group" "aad_group" {
+  display_name     = var.aad_group_name_avd
+  security_enabled = true
+  provider = azuread.rpa
+}
+
+data "azuread_user" "aad_user" {
+  for_each            = toset(var.avd_users)
+  user_principal_name = format("%s", each.key)
+  password            = "Avdaccess123@"
+}
+
+#data "azuread_user" "robot" {
+#  user_principal_name = "robot.roger.robot.roger@trondheim.kommune.no"
 #}
 
-#resource "azurerm_role_assignment" "role_useraccount" {
-#  scope              = data.azuread_user.aad_user.object_id
-#  role_definition_id = data.azurerm_role_definition.role_viewonportal_nd_login.id
-#  principal_id       = data.azuread_group.aad_group.object_id
-#}
+
+resource "azuread_group_member" "aad_group_member" {
+  for_each         = data.azuread_user.aad_user
+  group_object_id  = azuread_group.aad_group.id
+  member_object_id = each.value["id"]
+}
+
+resource "azurerm_role_assignment" "role_useraccount" {
+  scope              = data.azuread_user.aad_user.object_id
+  role_definition_id = data.azurerm_role_definition.role_viewonportal_nd_login.id
+  principal_id       = data.azuread_group.aad_group.object_id
+}
 
 resource "azurerm_role_assignment" "role_dag" {
   scope              = "${var.azurerm_virtual_desktop_application_group_dag_id}"

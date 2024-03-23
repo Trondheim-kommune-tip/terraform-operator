@@ -12,6 +12,14 @@ terraform {
 }
 
 
+# Configure the Azure Active Directory Provider then only domain join worked. above RM was there.
+provider "azuread" {
+  tenant_id     = "${var.arm_tenant_id}"           # 831195d3-b68b-433a-8687-4cdb1532958e
+  alias = "rpa"
+}
+
+
+
 ## AD domains
 # it-con-01 AD domain controller access
 # useful for the section data "azuread_domains" "avd_domain"
