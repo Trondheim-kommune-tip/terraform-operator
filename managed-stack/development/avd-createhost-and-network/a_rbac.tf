@@ -38,21 +38,22 @@ resource "azuread_user" "aad_user" {
   display_name        = format("%s", each.key)
   user_principal_name = format("%s", each.key)
   password            = "Avdaccess123@"
+  force_password_change = true
 }
 
 #data "azuread_user" "robot" {
 #  user_principal_name = "robot.roger.robot.roger@trondheim.kommune.no"
 #}
 
-
 resource "azuread_group_member" "aad_group_member" {
-  for_each         = data.azuread_user.aad_user
+  for_each         = azuread_user.aad_user
   group_object_id  = azuread_group.aad_group.id
   member_object_id = each.value["id"]
 }
 
 resource "azurerm_role_assignment" "role_useraccount" {
-  scope              = data.azuread_user.aad_user.object_id
+  for_each           = azuread_user.aad_user
+  scope              = azuread_user.aad_user.object_id
   role_definition_id = data.azurerm_role_definition.role_viewonportal_nd_login.id
   principal_id       = data.azuread_group.aad_group.object_id
 }
