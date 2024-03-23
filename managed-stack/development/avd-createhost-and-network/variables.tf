@@ -224,7 +224,6 @@ variable "aad_group_name_avd" {
 variable "avd_users" {
   description = "AVD users"
   default = []
-  ]
 }
 
 
