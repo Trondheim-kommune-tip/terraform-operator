@@ -39,5 +39,5 @@ data "azurerm_role_definition" "storage_role" {
 resource "azurerm_role_assignment" "af_role" {
   scope              = azurerm_storage_account.storage.id
   role_definition_id = data.azurerm_role_definition.storage_role.id
-  principal_id       = data.azuread_group.aad_group.object_id
+  principal_id       = azuread_group.aad_group.object_id
 }
