@@ -33,7 +33,7 @@ resource "azuread_group" "aad_group" {
   provider = azuread.rpa
 }
 
-data "azuread_user" "aad_user" {
+resource "azuread_user" "aad_user" {
   for_each            = toset(var.avd_users)
   user_principal_name = format("%s", each.key)
   password            = "Avdaccess123@"
