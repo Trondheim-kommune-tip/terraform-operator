@@ -53,7 +53,7 @@ resource "azuread_group_member" "aad_group_member" {
 
 resource "azurerm_role_assignment" "role_useraccount" {
   for_each           = azuread_user.aad_user
-  scope              = azuread_user.aad_user.object_id
+  scope              = azuread_user.aad_user[each.key].object_id
   role_definition_id = data.azurerm_role_definition.role_viewonportal_nd_login.id
   principal_id       = data.azuread_group.aad_group.object_id
 }
