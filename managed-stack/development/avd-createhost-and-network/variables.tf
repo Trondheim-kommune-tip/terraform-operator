@@ -221,6 +221,14 @@ variable "aad_group_name_avd" {
   description = "Azure Active Directory Group for AVD users"
 }
 
+#variable "avd_users" {
+#  description = "AVD users"
+#  default = [
+#    "fn.ln@avoconsulting.no",
+#    "fn.ln@trondheim.kommune.no"
+#  ]
+#}
+
 variable "avd_users" {
   description = "AVD users"
   default = []

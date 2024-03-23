@@ -33,6 +33,7 @@ data "azuread_group" "aad_group" {
 #  provider = azuread.rpa
 #}
 
+# later remove this section
 #resource "azuread_user" "aad_user" {
 #  for_each            = toset(var.avd_users)
 #  display_name        = format("%s", each.key)
