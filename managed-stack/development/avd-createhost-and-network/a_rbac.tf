@@ -55,30 +55,30 @@ resource "azurerm_role_assignment" "role_useraccount" {
   for_each           = azuread_user.aad_user
   scope              = azuread_user.aad_user[each.key].object_id
   role_definition_id = data.azurerm_role_definition.role_viewonportal_nd_login.id
-  principal_id       = data.azuread_group.aad_group.object_id
+  principal_id       = azuread_group.aad_group.object_id
 }
 
 resource "azurerm_role_assignment" "role_dag" {
   scope              = "${var.azurerm_virtual_desktop_application_group_dag_id}"
   role_definition_id = data.azurerm_role_definition.role_dvc.id
-  principal_id       = data.azuread_group.aad_group.object_id
+  principal_id       = azuread_group.aad_group.object_id
 }
 
 resource "azurerm_role_assignment" "role_workspace" {
   scope              = "${var.azurerm_virtual_desktop_workspace_workspace_id}"
   role_definition_id = data.azurerm_role_definition.role_dvc.id
-  principal_id       = data.azuread_group.aad_group.object_id
+  principal_id       = azuread_group.aad_group.object_id
 }
 
 resource "azurerm_role_assignment" "role_hostpool" {
   scope              = "${var.azure_virtual_desktop_host_pool_hostpool_id}"
   role_definition_id = data.azurerm_role_definition.role_dvc.id
-  principal_id       = data.azuread_group.aad_group.object_id
+  principal_id       = azuread_group.aad_group.object_id
 }
 
 resource "azurerm_role_assignment" "role_sessionhost" {
   count              = var.rdsh_count
   scope              = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
   role_definition_id = data.azurerm_role_definition.role_session_host.id
-  principal_id       = data.azuread_group.aad_group.object_id
+  principal_id       = azuread_group.aad_group.object_id
 }
