@@ -29,8 +29,6 @@ data "azuread_group" "aad_group" {
   display_name     = var.aad_group_name
   security_enabled = true
 }
-<<<<<<< HEAD
-=======
 
 #data "azuread_user" "aad_user" {
 #  for_each            = toset(var.avd_users)
@@ -41,7 +39,6 @@ data "azuread_group" "aad_group" {
 #data "azuread_user" "robot" {
 #  user_principal_name = "robot.roger.robot.roger@trondheim.kommune.no"
 #}
->>>>>>> ae4c823 (fix rbac)
 
 #resource "azuread_group" "aad_group" {
 #  display_name     = var.aad_group_name_avd
@@ -69,12 +66,7 @@ data "azuread_group" "aad_group" {
 #}
 
 #resource "azurerm_role_assignment" "role_useraccount" {
-<<<<<<< HEAD
-#  for_each           = azuread_user.aad_user
-#  scope              = azuread_user.aad_user[each.key].object_id
-=======
 #  scope              = data.azuread_user.aad_user.object_id
->>>>>>> ae4c823 (fix rbac)
 #  role_definition_id = data.azurerm_role_definition.role_viewonportal_nd_login.id
 #  principal_id       = data.azuread_group.aad_group.object_id
 #}
@@ -113,3 +105,5 @@ resource "azurerm_role_assignment" "role_dag_dvu" {
   role_definition_id = data.azurerm_role_definition.role_dvu.id
   principal_id       = data.azuread_group.aad_group.object_id
 }
+
+
