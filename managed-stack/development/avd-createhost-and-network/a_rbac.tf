@@ -100,10 +100,10 @@ resource "azurerm_role_assignment" "role_sessionhost" {
 }
 
 # dvu 
-resource "azurerm_role_assignment" "role_dag_dvu" {
-  scope              = "${var.azurerm_virtual_desktop_application_group_dag_id}"
-  role_definition_id = data.azurerm_role_definition.role_dvu.id
-  principal_id       = data.azuread_group.aad_group.object_id
-}
+#resource "azurerm_role_assignment" "role_dag_dvu" {
+#  scope              = "${var.azurerm_virtual_desktop_application_group_dag_id}"
+#  role_definition_id = data.azurerm_role_definition.role_dvu.id
+#  principal_id       = data.azuread_group.aad_group.object_id
+#}
 
 
