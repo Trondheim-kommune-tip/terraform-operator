@@ -16,16 +16,32 @@ data "azurerm_role_definition" "role_session_host" {
   name = "Virtual Machine Contributor"
 }
 
+
 # View Virtual Machines in the portal and login as a regular user.
 data "azurerm_role_definition" "role_viewonportal_nd_login" { 
   name = "Virtual Machine User Login"
 }
 
+
+######### aad group
 # resource "azuread_group" "aad_group" was earlier
 data "azuread_group" "aad_group" {
   display_name     = var.aad_group_name
   security_enabled = true
 }
+<<<<<<< HEAD
+=======
+
+#data "azuread_user" "aad_user" {
+#  for_each            = toset(var.avd_users)
+#  user_principal_name = format("%s", each.key)
+#  password            = "Avdaccess123@"
+#}
+
+#data "azuread_user" "robot" {
+#  user_principal_name = "robot.roger.robot.roger@trondheim.kommune.no"
+#}
+>>>>>>> ae4c823 (fix rbac)
 
 #resource "azuread_group" "aad_group" {
 #  display_name     = var.aad_group_name_avd
@@ -53,12 +69,19 @@ data "azuread_group" "aad_group" {
 #}
 
 #resource "azurerm_role_assignment" "role_useraccount" {
+<<<<<<< HEAD
 #  for_each           = azuread_user.aad_user
 #  scope              = azuread_user.aad_user[each.key].object_id
+=======
+#  scope              = data.azuread_user.aad_user.object_id
+>>>>>>> ae4c823 (fix rbac)
 #  role_definition_id = data.azurerm_role_definition.role_viewonportal_nd_login.id
 #  principal_id       = data.azuread_group.aad_group.object_id
 #}
 
+
+# roles 
+# https://learn.microsoft.com/en-us/azure/virtual-desktop/tutorial-try-deploy-windows-11-desktop?tabs=windows-client#prerequisites
 resource "azurerm_role_assignment" "role_dag" {
   scope              = "${var.azurerm_virtual_desktop_application_group_dag_id}"
   role_definition_id = data.azurerm_role_definition.role_dvc.id
@@ -81,5 +104,12 @@ resource "azurerm_role_assignment" "role_sessionhost" {
   count              = var.rdsh_count
   scope              = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
   role_definition_id = data.azurerm_role_definition.role_session_host.id
+  principal_id       = data.azuread_group.aad_group.object_id
+}
+
+# dvu 
+resource "azurerm_role_assignment" "role_dag_dvu" {
+  scope              = "${var.azurerm_virtual_desktop_application_group_dag_id}"
+  role_definition_id = data.azurerm_role_definition.role_dvu.id
   principal_id       = data.azuread_group.aad_group.object_id
 }
