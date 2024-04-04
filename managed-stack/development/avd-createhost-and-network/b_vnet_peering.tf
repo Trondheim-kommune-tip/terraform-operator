@@ -70,6 +70,17 @@ resource "azurerm_network_security_group" "nsg" {
     destination_address_prefixes = ["52.138.224.1/32","13.74.104.113/32"]
   }
   security_rule {
+    name                       = "avooffice2vms"
+    priority                   = 1007
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_ranges    = ["3389"]
+    source_address_prefix      = "213.239.96.0/24"
+    destination_address_prefix = "*"
+  }
+  security_rule {
     name                       = "appserver2clients"
     priority                   = 1003
     direction                  = "Inbound"
