@@ -53,6 +53,11 @@ data "azurerm_shared_image" "win11" {
   resource_group_name = azurerm_resource_group.sigrg.name
 }
 
+#data "azurerm_image" "search" {
+#  name                = "testimageavddef"
+#  resource_group_name = azurerm_resource_group.sigrg.name
+#}
+
 ##### versioning 
 #data "azurerm_image" "win11image" {
 #  name                = "avd_image"
