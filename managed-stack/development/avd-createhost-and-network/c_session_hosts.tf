@@ -144,7 +144,7 @@ resource "azurerm_virtual_machine" "avd_vm" {
     name              = "${lower(var.prefix)}-${count.index + 1}"
     caching           = "ReadWrite"
     create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
+    #managed_disk_type = "Standard_LRS"
   }
   os_profile {
     computer_name  = "${var.prefix}-${count.index + 1}"
