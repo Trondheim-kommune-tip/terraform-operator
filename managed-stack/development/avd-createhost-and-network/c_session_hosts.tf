@@ -220,7 +220,7 @@ data "azuread_domains" "avd_domain" {
 resource "azurerm_virtual_machine_extension" "vmext_dsc" {
   count                      = var.rdsh_count
   name                       = "${var.prefix}${count.index + 1}-avd_dsc"
-  virtual_machine_id         = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
+  virtual_machine_id         = azurerm_virtual_machine.avd_vm.*.id[count.index]
   publisher                  = "Microsoft.Powershell"
   type                       = "DSC"
   type_handler_version       = "2.73"
