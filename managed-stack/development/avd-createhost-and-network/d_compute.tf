@@ -48,7 +48,7 @@ resource "azurerm_shared_image" "win11" {
 
 data "azurerm_shared_image" "win11" {
   #|name                = azurerm_shared_image.win11.name
-  name                = "testimageavd"
+  name                = "testavdimagedef"
   gallery_name        = "sig${random_string.random.id}"
   resource_group_name = azurerm_resource_group.sigrg.name
 }
