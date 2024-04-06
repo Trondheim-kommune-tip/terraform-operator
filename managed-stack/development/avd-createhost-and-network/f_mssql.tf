@@ -30,7 +30,7 @@ resource "azurerm_mssql_server" "mssql" {
   name                         = "mssql-resource"
   resource_group_name          = "${var.azure_virtual_desktop_compute_resource_group}"
   location                     = var.deploy_location
-  version                      = "16.0"
+  version                      = "12.0"
   administrator_login          = "adminMSQL"
   administrator_login_password = "Admin123!"
   minimum_tls_version          = "1.2"
