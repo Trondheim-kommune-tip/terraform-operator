@@ -151,7 +151,7 @@ variable "storage_subnet_range" {
 #### sql_db
 variable "sql_db_name" {
   type        = string
-  default     = "rpadb"
+  default     = "BluePrismProduction"
   description = "rpa mssql db"
 }
 
