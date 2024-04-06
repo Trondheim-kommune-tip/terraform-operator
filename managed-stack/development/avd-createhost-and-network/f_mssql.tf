@@ -56,6 +56,34 @@ resource "azurerm_mssql_virtual_network_rule" "mssql" {
 }
 
 resource "azurerm_mssql_database" "mssql" {
+  name      = "rpadb"
+  server_id = azurerm_mssql_server.mssql.id
+  collation      = "SQL_Latin1_General_CP1_CI_AS"
+  license_type   = "LicenseIncluded"
+  max_size_gb    = 50
+  read_scale     = false
+  sku_name       = "S0"
+  zone_redundant = false
+  enclave_type   = "VBS"
+
+  tags = {
+    db = "rpa"
+  }
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.mssql.id]
+  }
+
+  transparent_data_encryption_key_vault_key_id = azurerm_key_vault_key.mssql.id
+
+
+  # prevent the possibility of accidental data loss
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "azurerm_mssql_database" "mssql1" {
   name      = var.sql_db_name
   server_id = azurerm_mssql_server.mssql.id
   collation      = "SQL_Latin1_General_CP1_CI_AS"
@@ -67,7 +95,7 @@ resource "azurerm_mssql_database" "mssql" {
   enclave_type   = "VBS"
 
   tags = {
-    db = "rpa"
+    db = "BluePrismProduction"
   }
   identity {
     type         = "UserAssigned"
