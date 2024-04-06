@@ -94,7 +94,7 @@ resource "azurerm_role_assignment" "role_hostpool" {
 
 resource "azurerm_role_assignment" "role_sessionhost" {
   count              = var.rdsh_count
-  scope              = azurerm_virtual_machine.avd_vm.*.id[count.index]
+  scope              = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
   role_definition_id = data.azurerm_role_definition.role_session_host.id
   principal_id       = data.azuread_group.aad_group.object_id
 }

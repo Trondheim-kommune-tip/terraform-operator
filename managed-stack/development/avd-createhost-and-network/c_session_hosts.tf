@@ -82,86 +82,38 @@ data "azurerm_user_assigned_identity" "mssql" {
 
 #virtual machine
 # VMs
-#resource "azurerm_windows_virtual_machine" "avd_vm" {
-#  count                 = var.rdsh_count
-#  name                  = "${var.prefix}-${count.index + 1}"
-#  resource_group_name   = azurerm_resource_group.rg.name
-#  location              = azurerm_resource_group.rg.location
-#  size                  = var.vm_size
-#  network_interface_ids = ["${azurerm_network_interface.avd_vm_nic.*.id[count.index]}"]
-#  provision_vm_agent    = true
-#  admin_username        = var.local_admin_username
-#  admin_password        = var.local_admin_password
-#  capacity_reservation_group_id = azurerm_capacity_reservation_group.avd_vm_cap_group.id
-
-#  os_disk {
-#    name                 = "${lower(var.prefix)}-${count.index + 1}"
-#    caching              = "ReadWrite"
-#    storage_account_type = "Standard_LRS"
-#    #disk_size_gb         = "150"
-#  }
-
-#  #source_image_reference {
-#  #  publisher = "MicrosoftWindowsDesktop"
-#  #  offer     = "office-365"
-#  #  sku       = "win11-23h2-avd-m365"
-#  #  version   = "latest"
-#  #}
-#  source_image_id = data.azurerm_shared_image.win11.id
-
-#  identity {
-#    type         = "UserAssigned"
-#    identity_ids = [azurerm_user_assigned_identity.mssql.id]
-#  }
-
-#  depends_on = [
-#    azurerm_resource_group.rg,
-#    azurerm_network_interface.avd_vm_nic,
-#    azurerm_shared_image.win11,
-#    azurerm_mssql_server.mssql
-#  ]
-#}
-
-resource "azurerm_virtual_machine" "avd_vm" {
+resource "azurerm_windows_virtual_machine" "avd_vm" {
   count                 = var.rdsh_count
   name                  = "${var.prefix}-${count.index + 1}"
-  location              = azurerm_resource_group.rg.location
   resource_group_name   = azurerm_resource_group.rg.name
+  location              = azurerm_resource_group.rg.location
+  size                  = var.vm_size
   network_interface_ids = ["${azurerm_network_interface.avd_vm_nic.*.id[count.index]}"]
-  vm_size               = var.vm_size
-  license_type          = "Windows_Client"
+  provision_vm_agent    = true
+  admin_username        = var.local_admin_username
+  admin_password        = var.local_admin_password
+  capacity_reservation_group_id = azurerm_capacity_reservation_group.avd_vm_cap_group.id
 
-  # Uncomment this line to delete the OS disk automatically when deleting the VM
-  # delete_os_disk_on_termination = true
+  os_disk {
+    name                 = "${lower(var.prefix)}-${count.index + 1}"
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+    #disk_size_gb         = "150"
+  }
 
-  # Uncomment this line to delete the data disks automatically when deleting the VM
-  # delete_data_disks_on_termination = true
+  source_image_reference {
+    publisher = "MicrosoftWindowsDesktop"
+    offer     = "office-365"
+    sku       = "win11-23h2-avd-m365"
+    version   = "latest"
+  }
+  #source_image_id = data.azurerm_shared_image.win11.id
 
-  storage_image_reference {
-    id = data.azurerm_shared_image.win11.id
-  }
-  storage_os_disk {
-    name              = "${lower(var.prefix)}-${count.index + 1}"
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    #managed_disk_type = "Standard_LRS"
-  }
-  os_profile {
-    computer_name  = "${var.prefix}-${count.index + 1}"
-    admin_username = var.local_admin_username
-    admin_password = var.local_admin_password
-  }
-  os_profile_windows_config {
-    enable_automatic_upgrades = true
-    timezone = "W. Europe Standard Time"
-  }
-  tags = {
-    environment = "poc"
-  }
   identity {
     type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.mssql.id]
   }
+
   depends_on = [
     azurerm_resource_group.rg,
     azurerm_network_interface.avd_vm_nic,
@@ -169,6 +121,54 @@ resource "azurerm_virtual_machine" "avd_vm" {
     azurerm_mssql_server.mssql
   ]
 }
+
+#resource "azurerm_virtual_machine" "avd_vm" {
+#  count                 = var.rdsh_count
+#  name                  = "${var.prefix}-${count.index + 1}"
+#  location              = azurerm_resource_group.rg.location
+#  resource_group_name   = azurerm_resource_group.rg.name
+#  network_interface_ids = ["${azurerm_network_interface.avd_vm_nic.*.id[count.index]}"]
+#  vm_size               = var.vm_size
+#  license_type          = "Windows_Client"
+
+#  # Uncomment this line to delete the OS disk automatically when deleting the VM
+#  # delete_os_disk_on_termination = true
+
+#  # Uncomment this line to delete the data disks automatically when deleting the VM
+#  # delete_data_disks_on_termination = true
+
+#  storage_image_reference {
+#    id = data.azurerm_shared_image.win11.id
+#  }
+#  storage_os_disk {
+#    name              = "${lower(var.prefix)}-${count.index + 1}"
+#    caching           = "ReadWrite"
+#    create_option     = "FromImage"
+#    #managed_disk_type = "Standard_LRS"
+#  }
+#  os_profile {
+#    computer_name  = "${var.prefix}-${count.index + 1}"
+#    admin_username = var.local_admin_username
+#    admin_password = var.local_admin_password
+#  }
+#  os_profile_windows_config {
+#    enable_automatic_upgrades = true
+#    timezone = "W. Europe Standard Time"
+#  }
+#  tags = {
+#    environment = "poc"
+#  }
+#  identity {
+#    type         = "UserAssigned"
+#    identity_ids = [azurerm_user_assigned_identity.mssql.id]
+#  }
+#  depends_on = [
+#    azurerm_resource_group.rg,
+#    azurerm_network_interface.avd_vm_nic,
+#    azurerm_shared_image.win11,
+#    azurerm_mssql_server.mssql
+#  ]
+#}
 
 # get AD tenant domain name 
 # retrieves your primary Azure AD tenant domain. 
@@ -220,7 +220,7 @@ data "azuread_domains" "avd_domain" {
 resource "azurerm_virtual_machine_extension" "vmext_dsc" {
   count                      = var.rdsh_count
   name                       = "${var.prefix}${count.index + 1}-avd_dsc"
-  virtual_machine_id         = azurerm_virtual_machine.avd_vm.*.id[count.index]
+  virtual_machine_id         = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
   publisher                  = "Microsoft.Powershell"
   type                       = "DSC"
   type_handler_version       = "2.73"
