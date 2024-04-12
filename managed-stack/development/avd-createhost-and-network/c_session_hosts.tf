@@ -192,7 +192,7 @@ resource "azurerm_virtual_machine_extension" "domain_join" {
     {
       "Name": "${var.domain_name}",
       "OUPath": "${var.ou_path}",
-      "User": "${var.domain_name}\\${var.domain_user_upn}",
+      "User": "${var.domain_user_upn}@${var.domain_name}",
       "Restart": "true",
       "Options": "3"
     }
