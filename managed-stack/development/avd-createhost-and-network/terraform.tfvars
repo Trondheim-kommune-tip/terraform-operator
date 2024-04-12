@@ -12,7 +12,7 @@ storage_subnet_range = ["10.1.2.0/24"]
 dns_servers          = ["10.0.1.4", "168.63.129.16", "10.68.5.5", "10.68.5.4", "10.68.0.61", "10.68.0.58"]
 #aad_group_name       = "Terraform-RPA"
 #aad_group_name_avd   = "AVDUsers"
-domain_name          = "tka.local"
+domain_name          = "A03-P1-DOM009.tka.local"
 domain_user_upn      = "testcifs"     # do not include domain name as this is appended
 domain_password      = "tk2006"       # give dummy values here and pass by secret in spacelift stack. 
 ou_path              = "OU=TK-Cloud,OU=Servers,DC=tka,DC=local"
