@@ -9,7 +9,8 @@ local_admin_password = "Avddesktop123$"
 vnet_range           = ["10.1.0.0/16"]
 subnet_range         = ["10.1.1.0/24"]
 storage_subnet_range = ["10.1.2.0/24"]
-dns_servers          = ["10.68.0.58", "10.68.0.61", "10.0.1.4", "168.63.129.16"]
+dns_servers          = ["10.68.0.58", "10.68.0.61"]
+#  "10.0.1.4", "168.63.129.16"
 #aad_group_name       = "Terraform-RPA"
 #aad_group_name_avd   = "AVDUsers"
 domain_name          = "A03-P1-DOM009.tka.local"
