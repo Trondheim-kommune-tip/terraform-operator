@@ -256,3 +256,24 @@ PROTECTED_SETTINGS
   ]
 }
 
+resource "azurerm_route_table" "rpa" {
+  name                  = "rpa-route-table"
+  resource_group_name   = azurerm_resource_group.rg.name
+  location              = azurerm_resource_group.rg.location
+  disable_bgp_route_propagation = false
+
+  route {
+    name           = "rpa2internet"
+    address_prefix = "0.0.0.0/0"
+    next_hop_type  = "Internet"
+  }
+
+  tags = {
+    environment = "rpa"
+  }
+}
+
+resource "azurerm_subnet_route_table_association" "rpa" {
+  subnet_id      = "${azurerm_virtual_network.vnet.subnet.*.id[0]}"
+  route_table_id = azurerm_route_table.rpa.id
+}
