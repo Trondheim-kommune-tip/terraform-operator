@@ -109,9 +109,9 @@ resource "azurerm_network_security_group" "nsg" {
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_ranges    = ["88","135","139","389","445","53","389","49152-65535"]
+    destination_port_ranges    = ["88","135","139","636","389","445","53","49152-65535"]
     source_address_prefix      = "10.1.1.0/24"
-    destination_address_prefixes = ["10.68.5.0/24","10.68.0.0/24"]
+    destination_address_prefixes = ["10.68.0.0/16"]
   }
   security_rule {
     name                       = "domainjoinudp"
@@ -120,9 +120,9 @@ resource "azurerm_network_security_group" "nsg" {
     access                     = "Allow"
     protocol                   = "Udp"
     source_port_range          = "*"
-    destination_port_ranges    = ["53","389"]
+    destination_port_ranges    = ["53","389","636"]
     source_address_prefix      = "10.1.1.0/24"
-    destination_address_prefixes = ["10.68.5.0/24","10.68.0.0/24"]
+    destination_address_prefixes = ["10.68.0.0/16"]
   }
   depends_on = [azurerm_resource_group.rg]               #### rg-avd-compute
 }

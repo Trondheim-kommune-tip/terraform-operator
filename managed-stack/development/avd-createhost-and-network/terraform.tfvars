@@ -14,9 +14,9 @@ dns_servers          = ["10.68.0.58", "10.68.0.61"]
 #aad_group_name       = "Terraform-RPA"
 #aad_group_name_avd   = "AVDUsers"
 domain_name          = "A03-P1-DOM009.tka.local"
-domain_user_upn      = "testcifs"     # do not include domain name as this is appended
+domain_user_upn      = "TESTCIFS"     # do not include domain name as this is appended
 domain_password      = "tk2006"       # give dummy values here and pass by secret in spacelift stack. 
-ou_path              = "OU=TK-Cloud,OU=Servers,DC=tka,DC=local"
+ou_path              = "OU=TK-Cloud,OU=Servers,DC=A03-P1-DOM009,DC=tka,DC=local"
 
 
 # hub network AAD Domain controllers. 
