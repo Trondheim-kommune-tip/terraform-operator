@@ -14,8 +14,8 @@ dns_servers          = ["10.68.0.58", "10.68.0.61"]
 #aad_group_name       = "Terraform-RPA"
 #aad_group_name_avd   = "AVDUsers"
 domain_name          = "tka.local"
-domain_user_upn      = "TESTCIFS"     # do not include domain name as this is appended
-domain_password      = "tk2006"       # give dummy values here and pass by secret in spacelift stack. 
+domain_user_upn      = "rpadomainjoin"     # do not include domain name as this is appended
+domain_password      = "{|;PKq;=AR{z]DzeJ:ZOC!S$"       # give dummy values here and pass by secret in spacelift stack. 
 ou_path              = "OU=TK-Cloud,OU=Servers,DC=tka,DC=local"
 
 
