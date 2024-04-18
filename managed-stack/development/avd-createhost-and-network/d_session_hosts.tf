@@ -9,7 +9,7 @@
 # Use variables file
 ###############
 locals {
-  registration_token = var.azurerm_virtual_desktop_host_pool_registration_info_registrationinfo_token
+  registration_token = azurerm_virtual_desktop_host_pool_registration_info.registrationinfo.token
 }
 
 resource "random_string" "AVD_local_password" {
@@ -77,7 +77,7 @@ resource "azurerm_capacity_reservation" "avd_vm_cap_res" {
 # access mssql
 data "azurerm_user_assigned_identity" "mssql" {
   name                = "mssql-admin"
-  resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"
+  resource_group_name = azurerm_resource_group.sh.name
 }
 
 #virtual machine
@@ -228,7 +228,7 @@ resource "azurerm_virtual_machine_extension" "vmext_dsc" {
 
   lifecycle {
     precondition {
-      condition     = var.azure_virtual_desktop_host_pool_hostpool_id != ""
+      condition     = azurerm_virtual_desktop_host_pool.hostpool.id != ""
       error_message = "azure_virtual_desktop_host_pool_hostpool_id is empty and needs to be created"
     }
   }

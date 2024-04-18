@@ -78,6 +78,26 @@ variable "local_admin_password" {
   sensitive   = true
 }
 
+######
+## avd configure
+######
+variable "workspace" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop workspace"
+  default     = "AVD-TF-Workspace"
+}
+
+variable "hostpool" {
+  type        = string
+  description = "Name of the Azure Virtual Desktop host pool"
+  default     = "AVD-TF-HP"
+}
+
+variable "rfc3339" {
+  type        = string
+  default     = "2024-04-05T12:43:13Z"
+  description = "Registration token expiration"
+}
 
 
 ########################
@@ -131,12 +151,6 @@ variable "subnet_range" {
   description = "Address range for session host subnet"
 }
 
-variable "azurerm_virtual_desktop_host_pool_registration_info_registrationinfo_token" {
-  type        = string
-  default     = "reg_info_token"
-  description = "value of host pool reg info token"
-}
-
 
 #############
 # storage
@@ -188,24 +202,6 @@ variable "arm_subscription_id" {
 variable "ad_arm_subscription_id" {
   type = string
   description = "azure AD subs id for peering"
-  default = "id"
-}
-
-variable "azurerm_virtual_desktop_application_group_dag_id" {
-  type = string
-  description = "azure AD azurerm_virtual_desktop_application_group_dag_id id"
-  default = "id"
-}
-
-variable "azurerm_virtual_desktop_workspace_workspace_id" {
-  type = string
-  description = "azure AD azurerm_virtual_desktop_workspace_workspace_id id"
-  default = "id"
-}
-
-variable "azure_virtual_desktop_host_pool_hostpool_id" {
-  type = string
-  description = "azure AD azure_virtual_desktop_host_pool_hostpool_id id"
   default = "id"
 }
 

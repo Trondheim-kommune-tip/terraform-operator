@@ -20,7 +20,7 @@ resource "azurerm_virtual_network" "vnet" {
   address_space       = var.vnet_range
   dns_servers         = var.dns_servers
   location            = var.deploy_location
-  resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"           #### rg-avd-resources 
+  resource_group_name = azurerm_resource_group.sh.name  #### rg-avd-resources 
   subnet {
     name           = "default"
     address_prefix = "10.1.1.0/24"
@@ -35,7 +35,7 @@ resource "azurerm_virtual_network" "vnet" {
 resource "azurerm_network_security_group" "nsg" {
   name                = "${var.prefix}-NSG"
   location            = var.deploy_location
-  resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"
+  resource_group_name = azurerm_resource_group.sh.name
   security_rule {
     name                       = "HTTPS"
     priority                   = 1001

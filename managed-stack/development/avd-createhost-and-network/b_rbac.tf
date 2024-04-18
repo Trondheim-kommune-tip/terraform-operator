@@ -75,19 +75,19 @@ data "azuread_group" "aad_group" {
 # roles 
 # https://learn.microsoft.com/en-us/azure/virtual-desktop/tutorial-try-deploy-windows-11-desktop?tabs=windows-client#prerequisites
 resource "azurerm_role_assignment" "role_dag" {
-  scope              = "${var.azurerm_virtual_desktop_application_group_dag_id}"
+  scope              = azurerm_virtual_desktop_application_group.dag.id
   role_definition_id = data.azurerm_role_definition.role_dvc.id
   principal_id       = data.azuread_group.aad_group.object_id
 }
 
 resource "azurerm_role_assignment" "role_workspace" {
-  scope              = "${var.azurerm_virtual_desktop_workspace_workspace_id}"
+  scope              = azurerm_virtual_desktop_workspace.workspace.id
   role_definition_id = data.azurerm_role_definition.role_dvc.id
   principal_id       = data.azuread_group.aad_group.object_id
 }
 
 resource "azurerm_role_assignment" "role_hostpool" {
-  scope              = "${var.azure_virtual_desktop_host_pool_hostpool_id}"
+  scope              = azurerm_virtual_desktop_host_pool.hostpool.id
   role_definition_id = data.azurerm_role_definition.role_dvc.id
   principal_id       = data.azuread_group.aad_group.object_id
 }
@@ -101,7 +101,7 @@ resource "azurerm_role_assignment" "role_sessionhost" {
 
 # dvu 
 #resource "azurerm_role_assignment" "role_dag_dvu" {
-#  scope              = "${var.azurerm_virtual_desktop_application_group_dag_id}"
+#  scope              = azurerm_virtual_desktop_application_group.dag.id
 #  role_definition_id = data.azurerm_role_definition.role_dvu.id
 #  principal_id       = data.azuread_group.aad_group.object_id
 #}

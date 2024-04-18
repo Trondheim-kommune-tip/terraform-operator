@@ -3,19 +3,19 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_user_assigned_identity" "mssql" {
   name                = "mssql-admin"
   location            = var.deploy_location
-  resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"
+  resource_group_name = azurerm_resource_group.sh.name
 }
 
 resource "azurerm_virtual_network" "mssql-vnet" {
   name                = "mssql-vnet"
   address_space       = ["11.1.0.0/16"]
   location            = var.deploy_location
-  resource_group_name = "${var.azure_virtual_desktop_compute_resource_group}"
+  resource_group_name = azurerm_resource_group.sh.name
 }
 
 resource "azurerm_subnet" "mssql" {
   name                 = "mssql-subnet"
-  resource_group_name  = "${var.azure_virtual_desktop_compute_resource_group}"
+  resource_group_name  = azurerm_resource_group.sh.name
   virtual_network_name = azurerm_virtual_network.mssql-vnet.name
   address_prefixes     = ["11.1.1.0/24"]
   service_endpoints    = ["Microsoft.Sql"]
@@ -28,7 +28,7 @@ resource "azurerm_subnet_network_security_group_association" "example" {
 
 resource "azurerm_mssql_server" "mssql" {
   name                         = "mssql-resource"
-  resource_group_name          = "${var.azure_virtual_desktop_compute_resource_group}"
+  resource_group_name          = azurerm_resource_group.sh.name
   location                     = var.deploy_location
   version                      = "12.0"
   administrator_login          = "adminMSQL"
@@ -115,7 +115,7 @@ resource "azurerm_mssql_database" "mssql1" {
 resource "azurerm_key_vault" "mssql" {
   name                        = "mssqltde"
   location                    = var.deploy_location
-  resource_group_name         = "${var.azure_virtual_desktop_compute_resource_group}"
+  resource_group_name         = azurerm_resource_group.sh.name
   enabled_for_disk_encryption = true
   tenant_id                   = azurerm_user_assigned_identity.mssql.tenant_id
   soft_delete_retention_days  = 7
