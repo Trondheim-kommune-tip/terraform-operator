@@ -35,7 +35,7 @@ resource "azurerm_virtual_desktop_host_pool" "hostpool" {
 
 resource "time_rotating" "avd_registration_expiration" {
   # Must be between 1 hour and 30 days
-  rotation_years = 5
+  rotation_days = 30
 }
 
 resource "azurerm_virtual_desktop_host_pool_registration_info" "registrationinfo" {
