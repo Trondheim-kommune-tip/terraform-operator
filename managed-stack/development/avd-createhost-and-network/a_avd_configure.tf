@@ -1,4 +1,10 @@
 # Resource group name is output when execution plan is applied.
+import {
+  to = azurerm_resource_group.sh
+  id = "/subscriptions/225e8bed-0445-4aa4-a9b7-a306aca77ad5/resourceGroups/rg-avd-resources"
+}
+
+
 resource "azurerm_resource_group" "sh" {
   name     = var.rg_name   # rg-avd-resources
   location = var.resource_group_location
