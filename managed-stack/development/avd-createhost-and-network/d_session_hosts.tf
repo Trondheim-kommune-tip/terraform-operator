@@ -10,6 +10,7 @@
 ###############
 locals {
   registration_token = azurerm_virtual_desktop_host_pool_registration_info.registrationinfo.token
+  host_pool_name = azurerm_virtual_desktop_host_pool.hostpool.name
 }
 
 resource "random_string" "AVD_local_password" {
@@ -238,7 +239,7 @@ resource "azurerm_virtual_machine_extension" "vmext_dsc" {
       "modulesUrl": "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_09-08-2022.zip",
       "configurationFunction": "Configuration.ps1\\AddSessionHost",
       "properties": {
-        "HostPoolName":"${var.azure_virtual_desktop_host_pool_name}"
+        "HostPoolName":"${local.host_pool_name}"
       }
     }
 SETTINGS
