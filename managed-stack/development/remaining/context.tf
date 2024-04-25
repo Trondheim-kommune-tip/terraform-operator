@@ -4,9 +4,9 @@
 # You can read about contexts here:
 #
 # https://docs.spacelift.io/concepts/context
-resource "spacelift_context" "managed" {
-  name        = "Managed context"
-  description = "Your first context managed by Terraform"
+resource "spacelift_context" "manageddev" {
+  name        = "Managed dev context"
+  description = "Your first dev context managed by Terraform"
 }
 
 # This is an envioronment variable defined on the context level. When the
@@ -19,7 +19,7 @@ resource "spacelift_context" "managed" {
 #
 # https://docs.spacelift.io/concepts/environment#environment-variables
 resource "spacelift_environment_variable" "context-plaintext" {
-  context_id = spacelift_context.managed.id
+  context_id = spacelift_context.manageddev.id
   name       = "CONTEXT_PUBLIC"
   value      = "This should be visible!"
   write_only = false
@@ -41,7 +41,7 @@ resource "random_password" "context-password" {
 # If you accidentally print it out to the logs, no worries: we will obfuscate
 # every secret thing we know of.
 resource "spacelift_environment_variable" "context-writeonly" {
-  context_id = spacelift_context.managed.id
+  context_id = spacelift_context.manageddev.id
   name       = "CONTEXT_SECRET"
   value      = random_password.context-password.result
 }
@@ -54,7 +54,7 @@ resource "spacelift_environment_variable" "context-writeonly" {
 #
 # https://docs.spacelift.io/concepts/environment#mounted-files
 resource "spacelift_mounted_file" "context-plaintext-file" {
-  context_id    = spacelift_context.managed.id
+  context_id    = spacelift_context.manageddev.id
   relative_path = "context-plaintext-file.json"
   content = base64encode(jsonencode({
     payload = spacelift_environment_variable.context-plaintext.value
@@ -66,7 +66,7 @@ resource "spacelift_mounted_file" "context-plaintext-file" {
 # like we just did that for the read-write one, we'll need to retrieve the value
 # of the password directly from its resource.
 resource "spacelift_mounted_file" "context-secret-file" {
-  context_id    = spacelift_context.managed.id
+  context_id    = spacelift_context.manageddev.id
   relative_path = "context-secret-password.json"
   content       = base64encode(jsonencode({ password = random_password.context-password.result }))
 }
@@ -80,7 +80,7 @@ resource "spacelift_mounted_file" "context-secret-file" {
 #
 # https://docs.spacelift.io/concepts/context#attaching-and-detaching
 resource "spacelift_context_attachment" "managed" {
-  context_id = spacelift_context.managed.id
-  stack_id   = spacelift_stack.managed.id
+  context_id = spacelift_context.manageddev.id
+  stack_id   = spacelift_stack.avd-rbac.id
   priority   = 0
 }
