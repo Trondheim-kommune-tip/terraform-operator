@@ -258,6 +258,26 @@ PROTECTED_SETTINGS
   ]
 }
 
+resource "azurerm_virtual_machine_extension" "powershell" {
+  name                 = "Mount storage fileshare"
+  virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm.id
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.0"
+
+  settings = <<SETTINGS
+    {
+      "script": "JGNvbm5lY3RUZXN0UmVzdWx0ID0gVGVzdC1OZXRDb25uZWN0aW9uIC1Db21wdXRlck5hbWUgc3RvcnU4aWouZmlsZS5jb3JlLndpbmRvd3MubmV0IC1Qb3J0IDQ0NQppZiAoJGNvbm5lY3RUZXN0UmVzdWx0LlRjcFRlc3RTdWNjZWVkZWQpIHsKICAgICMgU2F2ZSB0aGUgcGFzc3dvcmQgc28gdGhlIGRyaXZlIHdpbGwgcGVyc2lzdCBvbiByZWJvb3QKICAgIGNtZC5leGUgL0MgImNtZGtleSAvYWRkOiJzdG9ydThpai5maWxlLmNvcmUud2luZG93cy5uZXQiIC91c2VyOiJsb2NhbGhvc3Rcc3RvcnU4aWoiIC9wYXNzOiJkMStzRGlWcTg5SVlLMjBRdXh2YkFuOW1saGZMS3hWU2ZhdTRMRUpWb21pRCt3dE8rdTcyb2xQYjZhUi9PYkw2WWhqUG1GOUpWcEdoK0FTdE5VV29Cdz09IiIKICAgICMgTW91bnQgdGhlIGRyaXZlCiAgICBOZXctUFNEcml2ZSAtTmFtZSBaIC1QU1Byb3ZpZGVyIEZpbGVTeXN0ZW0gLVJvb3QgIlxcc3RvcnU4aWouZmlsZS5jb3JlLndpbmRvd3MubmV0XGZzbG9naXgiIC1QZXJzaXN0Cn0gZWxzZSB7CiAgICBXcml0ZS1FcnJvciAtTWVzc2FnZSAiVW5hYmxlIHRvIHJlYWNoIHRoZSBBenVyZSBzdG9yYWdlIGFjY291bnQgdmlhIHBvcnQgNDQ1LiBDaGVjayB0byBtYWtlIHN1cmUgeW91ciBvcmdhbml6YXRpb24gb3IgSVNQIGlzIG5vdCBibG9ja2luZyBwb3J0IDQ0NSwgb3IgdXNlIEF6dXJlIFAyUyBWUE4sIEF6dXJlIFMyUyBWUE4sIG9yIEV4cHJlc3MgUm91dGUgdG8gdHVubmVsIFNNQiB0cmFmZmljIG92ZXIgYSBkaWZmZXJlbnQgcG9ydC4iCn0="
+    }
+SETTINGS
+
+  depends_on = [
+    azurerm_virtual_machine_extension.domain_join,
+    azurerm_virtual_desktop_host_pool.hostpool,
+    azurerm_virtual_machine_extension.vmext_dsc
+  ]
+}
+
 resource "azurerm_route_table" "rpa" {
   name                  = "rpa-route-table"
   resource_group_name   = azurerm_resource_group.rg.name
