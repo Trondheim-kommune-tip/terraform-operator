@@ -259,7 +259,8 @@ PROTECTED_SETTINGS
 }
 
 resource "azurerm_virtual_machine_extension" "powershell" {
-  name                 = "Mount storage fileshare"
+  count                = var.rdsh_count
+  name                 = "${var.prefix}${count.index + 1}-mountstoragefs"
   virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
