@@ -24,15 +24,16 @@ resource "random_string" "AVD_local_password" {
 resource "azurerm_resource_group" "rg" {
   name     = var.rg                                # rg-avd-compute
   location = var.resource_group_location
+  ip_location = var.ip_deploy_location
 }
 
 
 resource "azurerm_public_ip" "avd_ext_ip" {
   count                   = var.rdsh_count
   name                    = "avd-ip-${count.index + 1}"
-  location                = azurerm_resource_group.rg.location
+  location                = azurerm_resource_group.rg.ip_location
   resource_group_name     = azurerm_resource_group.rg.name
-  allocation_method       = "Dynamic"
+  allocation_method       = "Static"
   idle_timeout_in_minutes = 30
 
   tags = {
@@ -257,8 +258,9 @@ PROTECTED_SETTINGS
 }
 
 resource "azurerm_virtual_machine_extension" "powershell" {
-  name                 = "Mount storage fileshare"
-  virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm.id
+  count                = var.rdsh_count
+  name                 = "${var.prefix}${count.index + 1}-mountstoragefs"
+  virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
   type_handler_version = "2.0"
