@@ -76,10 +76,10 @@ resource "azurerm_capacity_reservation" "avd_vm_cap_res" {
 }
 
 # access mssql
-data "azurerm_user_assigned_identity" "mssql" {
-  name                = "mssql-admin"
-  resource_group_name = azurerm_resource_group.rg.name
-}
+#data "azurerm_user_assigned_identity" "mssql" {
+#  name                = "mssql-admin"
+#  resource_group_name = azurerm_resource_group.rg.name
+#}
 
 #virtual machine
 # VMs
@@ -110,10 +110,10 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
   }
   #source_image_id = data.azurerm_shared_image.win11.id
 
-  identity {
-    type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.mssql.id]
-  }
+  #identity {
+  #  type         = "UserAssigned"
+  #  identity_ids = [azurerm_user_assigned_identity.mssql.id]
+  #}
 
   depends_on = [
     azurerm_resource_group.rg,
