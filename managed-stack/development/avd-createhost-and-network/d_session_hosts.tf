@@ -52,7 +52,7 @@ resource "azurerm_network_interface" "avd_vm_nic" {
     name                          = "nic${count.index + 1}_config"
     subnet_id                     = "${azurerm_virtual_network.vnet.subnet.*.id[0]}"
     private_ip_address_allocation = "Dynamic"
-    # public_ip_address_id          = "${azurerm_public_ip.avd_ext_ip.*.id[count.index]}"
+    public_ip_address_id          = "${azurerm_public_ip.avd_ext_ip.*.id[count.index]}"
   }
 
   depends_on = [
@@ -264,7 +264,7 @@ resource "azurerm_virtual_machine_extension" "powershell" {
   virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
-  type_handler_version = "2.1.3"
+  type_handler_version = "2.1"
   auto_upgrade_minor_version = true
 
   settings = <<SETTINGS
