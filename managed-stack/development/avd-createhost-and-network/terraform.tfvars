@@ -1,7 +1,6 @@
 # Customized the sample values below for your environment and either rename to terraform.tfvars or env.auto.tfvars
 
 ### Azure desktop VMs network 
-deploy_location      = "northeurope"
 rg_name              = "rg-avd-resources" # same rg for workspace/hostpool/dag/ws-dag
 prefix               = "avdtf"
 local_admin_username = "Avddesktop123adm"
