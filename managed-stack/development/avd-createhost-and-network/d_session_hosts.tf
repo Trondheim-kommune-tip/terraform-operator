@@ -260,7 +260,7 @@ PROTECTED_SETTINGS
 
 resource "azurerm_virtual_machine_extension" "powershell" {
   name                 = "Mount storage fileshare"
-  virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm.id
+  virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
   type_handler_version = "2.1.3"
