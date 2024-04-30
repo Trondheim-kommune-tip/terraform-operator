@@ -272,7 +272,6 @@ resource "azurerm_virtual_machine_extension" "powershell" {
     "commandToExecute": "powershell -ExecutionPolicy Unrestricted -NoProfile -NonInteractive -File powershell.ps1",
     "storageAccountName": "storu8ij",
     "storageAccountKey": "${var.storage_key}",
-    "managedIdentity" : {},
     "fileUris": [
         "https://storu8ij.file.core.windows.net/fslogix/powershell/powershell.ps1"
     ]
