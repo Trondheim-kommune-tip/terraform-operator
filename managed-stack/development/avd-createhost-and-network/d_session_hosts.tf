@@ -166,7 +166,6 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
 #    azurerm_resource_group.rg,
 #    azurerm_network_interface.avd_vm_nic,
 #    azurerm_shared_image.win11,
-#    azurerm_mssql_server.mssql
 #  ]
 #}
 
