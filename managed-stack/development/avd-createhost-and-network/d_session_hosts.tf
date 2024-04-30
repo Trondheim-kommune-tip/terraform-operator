@@ -262,22 +262,20 @@ resource "azurerm_virtual_machine_extension" "powershell" {
   count                = var.rdsh_count
   name                 = "${var.prefix}${count.index + 1}-mountstoragefs"
   virtual_machine_id   = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
-  publisher            = "Microsoft.Azure.Extensions"
-  type                 = "CustomScript"
-  type_handler_version = "2.1"
+  publisher            = "Microsoft.Compute"
+  type                 = "CustomScriptExtension"
+  type_handler_version = "1.10"
   auto_upgrade_minor_version = true
-
-  settings = <<SETTINGS
-  {
-    "fileUris": ["https://storu8ij.file.core.windows.net/fslogix/powershell/powershell.ps1"]
-  }
- SETTINGS
 
   protected_settings = <<PROTECTED_SETTINGS
   {    
     "commandToExecute": "powershell -ExecutionPolicy Unrestricted -NoProfile -NonInteractive -File powershell.ps1",
     "storageAccountName": "storu8ij",
-    "storageAccountKey": "${var.storage_key}"
+    "storageAccountKey": "${var.storage_key}",
+    "managedIdentity" : {},
+    "fileUris": [
+        "https://storu8ij.file.core.windows.net/fslogix/powershell/powershell.ps1"
+    ]
   }
  PROTECTED_SETTINGS
 
