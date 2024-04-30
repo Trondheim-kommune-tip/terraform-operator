@@ -25,13 +25,14 @@ resource "random_string" "AVD_local_password" {
 resource "azurerm_resource_group" "rg" {
   name     = var.rg                                # rg-avd-compute
   location = var.resource_group_location
+  ip_location = var.ip_deploy_location             # norwayeast
 }
 
 
 resource "azurerm_public_ip" "avd_ext_ip" {
   count                   = var.rdsh_count
   name                    = "avd-ip-${count.index + 1}"
-  location                = azurerm_resource_group.rg.location
+  location                = azurerm_resource_group.rg.ip_location
   resource_group_name     = azurerm_resource_group.rg.name
   allocation_method       = "Static"
   idle_timeout_in_minutes = 30
@@ -276,7 +277,7 @@ resource "azurerm_virtual_machine_extension" "powershell" {
   {    
     "commandToExecute": "powershell -ExecutionPolicy Unrestricted -NoProfile -NonInteractive -File powershell.ps1",
     "storageAccountName": "storu8ij",
-    "storageAccountKey": ""
+    "storageAccountKey": "${var.storage_key}"
   }
  PROTECTED_SETTINGS
 

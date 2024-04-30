@@ -122,6 +122,13 @@ variable "deploy_location" {
   description = "The Azure Region in which all resources in this example should be created."
 }
 
+variable "ip_deploy_location" {
+  type        = string
+  default     = "norwayeast"
+  description = "The Azure Region IPs for vm"
+}
+
+
 variable "ad_vnet" {
   type        = string
   default     = "infra-network"
@@ -161,6 +168,11 @@ variable "storage_subnet_range" {
   description = "Address range for storage subnet"
 }
 
+variable "storage_key" {
+  type        = string
+  default     = "dummy"
+  description = "storage key in tf vars for azure storage"
+}
 
 #### sql_db
 variable "sql_db_name" {
