@@ -270,10 +270,8 @@ resource "azurerm_virtual_machine_extension" "powershell" {
   protected_settings = <<PROTECTED_SETTINGS
   {    
     "commandToExecute": "powershell -ExecutionPolicy Unrestricted -NoProfile -NonInteractive -File powershell.ps1",
-    "storageAccountName": "storu8ij",
-    "storageAccountKey": "${var.storage_key}",
     "fileUris": [
-        "https://storu8ij.file.core.windows.net/fslogix/powershell/powershell.ps1"
+        "https://storu8ij.file.core.windows.net/fslogix/powershell/powershell.ps1?sp=r&st=2024-04-30T16:13:20Z&se=2026-12-30T17:13:00Z&spr=https&sv=2022-11-02&sig=${var.storage_key}"
     ]
   }
  PROTECTED_SETTINGS
