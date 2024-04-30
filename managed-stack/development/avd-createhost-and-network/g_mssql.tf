@@ -2,20 +2,20 @@ data "azurerm_client_config" "current" {}
 
 resource "azurerm_user_assigned_identity" "mssql" {
   name                = "mssql-admin"
-  location            = var.deploy_location
-  resource_group_name = azurerm_resource_group.sh.name
+  location            = var.session_deploy_location       # rg-avd-compute
+  resource_group_name = azurerm_resource_group.rg.name
 }
 
 resource "azurerm_virtual_network" "mssql-vnet" {
   name                = "mssql-vnet"
   address_space       = ["11.1.0.0/16"]
-  location            = var.deploy_location
-  resource_group_name = azurerm_resource_group.sh.name
+  location            = var.session_deploy_location       # rg-avd-compute
+  resource_group_name = azurerm_resource_group.rg.name
 }
 
 resource "azurerm_subnet" "mssql" {
   name                 = "mssql-subnet"
-  resource_group_name  = azurerm_resource_group.sh.name
+  resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.mssql-vnet.name
   address_prefixes     = ["11.1.1.0/24"]
   service_endpoints    = ["Microsoft.Sql"]
@@ -28,8 +28,8 @@ resource "azurerm_subnet_network_security_group_association" "example" {
 
 resource "azurerm_mssql_server" "mssql" {
   name                         = "mssql-resource"
-  resource_group_name          = azurerm_resource_group.sh.name
-  location                     = var.deploy_location
+  resource_group_name          = azurerm_resource_group.rg.name
+  location                     = var.session_deploy_location       # rg-avd-compute
   version                      = "12.0"
   administrator_login          = "adminMSQL"
   administrator_login_password = "Admin123!"
@@ -114,8 +114,8 @@ resource "azurerm_mssql_database" "mssql1" {
 # Create a key vault with access policies which allow for the current user to get, list, create, delete, update, recover, purge and getRotationPolicy for the key vault key and also add a key vault access policy for the Microsoft Sql Server instance User Managed Identity to get, wrap, and unwrap key(s)
 resource "azurerm_key_vault" "mssql" {
   name                        = "mssqltde"
-  location                    = var.deploy_location
-  resource_group_name         = azurerm_resource_group.sh.name
+  location                    = var.session_deploy_location       # rg-avd-compute
+  resource_group_name         = azurerm_resource_group.rg.name
   enabled_for_disk_encryption = true
   tenant_id                   = azurerm_user_assigned_identity.mssql.tenant_id
   soft_delete_retention_days  = 7

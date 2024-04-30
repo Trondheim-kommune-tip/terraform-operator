@@ -24,14 +24,14 @@ resource "random_string" "AVD_local_password" {
 # RG for session host is rg-avd-compute
 resource "azurerm_resource_group" "rg" {
   name     = var.rg                                # rg-avd-compute
-  location = var.resource_group_location
+  location = var.session_deploy_location
 }
 
 
 resource "azurerm_public_ip" "avd_ext_ip" {
   count                   = var.rdsh_count
   name                    = "avd-ip-${count.index + 1}"
-  location                = var.ip_deploy_location              # norwayeast
+  location                = azurerm_resource_group.rg.location           # norwayeast
   resource_group_name     = azurerm_resource_group.rg.name
   allocation_method       = "Static"
   idle_timeout_in_minutes = 30
@@ -283,24 +283,3 @@ resource "azurerm_virtual_machine_extension" "powershell" {
   ]
 }
 
-resource "azurerm_route_table" "rpa" {
-  name                  = "rpa-route-table"
-  resource_group_name   = azurerm_resource_group.rg.name
-  location              = azurerm_resource_group.rg.location
-  disable_bgp_route_propagation = false
-
-  route {
-    name           = "rpa2internet"
-    address_prefix = "0.0.0.0/0"
-    next_hop_type  = "Internet"
-  }
-
-  tags = {
-    environment = "rpa"
-  }
-}
-
-resource "azurerm_subnet_route_table_association" "rpa" {
-  subnet_id      = "${azurerm_virtual_network.vnet.subnet.*.id[0]}"
-  route_table_id = azurerm_route_table.rpa.id
-}

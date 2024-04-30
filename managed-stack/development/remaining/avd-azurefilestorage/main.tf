@@ -1,6 +1,6 @@
 ## Create a Resource Group for Storage
 resource "azurerm_resource_group" "rg_storage" {
-  location = var.deploy_location
+  location = var.resource_group_location
   name     = var.rg_stor
 }
 

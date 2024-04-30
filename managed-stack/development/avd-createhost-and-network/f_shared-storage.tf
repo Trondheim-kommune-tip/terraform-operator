@@ -17,7 +17,7 @@ resource "random_string" "random_SS" {
 resource "azurerm_storage_account" "storage" {
   name                     = "stor${random_string.random_SS.id}"
   resource_group_name      = azurerm_resource_group.sh.name
-  location                 = var.deploy_location
+  location                 = var.resource_group_location
   account_tier             = "Premium"
   account_replication_type = "LRS"
   account_kind             = "FileStorage"

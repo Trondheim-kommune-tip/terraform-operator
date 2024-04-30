@@ -1,7 +1,7 @@
 ##################
 # compute gallery
 resource "azurerm_resource_group" "sigrg" {
-  location = var.deploy_location
+  location = var.resource_group_location
   name     = var.rg_shared_name
 }
 

@@ -19,8 +19,8 @@ resource "azurerm_virtual_network" "vnet" {
   name                = "${var.prefix}-VNet"  # avdtf-Vnet
   address_space       = var.vnet_range
   dns_servers         = var.dns_servers
-  location            = var.deploy_location
-  resource_group_name = azurerm_resource_group.sh.name  #### rg-avd-resources 
+  location            = var.session_deploy_location
+  resource_group_name = azurerm_resource_group.rg.name  #### rg-avd-compute
   subnet {
     name           = "default"
     address_prefix = "10.1.1.0/24"
@@ -34,8 +34,8 @@ resource "azurerm_virtual_network" "vnet" {
 
 resource "azurerm_network_security_group" "nsg" {
   name                = "${var.prefix}-NSG"
-  location            = var.deploy_location
-  resource_group_name = azurerm_resource_group.sh.name
+  location            = var.session_deploy_location
+  resource_group_name = azurerm_resource_group.rg.name
   security_rule {
     name                       = "HTTPS"
     priority                   = 1001
@@ -128,6 +128,30 @@ resource "azurerm_network_security_group" "nsg" {
 }
 
 
+resource "azurerm_route_table" "rpa" {
+  name                  = "rpa-route-table"
+  resource_group_name   = azurerm_resource_group.rg.name
+  location              = var.session_deploy_location
+  disable_bgp_route_propagation = false
+
+  route {
+    name           = "rpa2internet"
+    address_prefix = "0.0.0.0/0"
+    next_hop_type  = "Internet"
+  }
+
+  tags = {
+    environment = "rpa"
+  }
+  depends_on = [azurerm_resource_group.rg] 
+}
+
+resource "azurerm_subnet_route_table_association" "rpa" {
+  subnet_id      = "${azurerm_virtual_network.vnet.subnet.*.id[0]}"
+  route_table_id = azurerm_route_table.rpa.id
+  depends_on = [azurerm_route_table.rpa]
+}
+
 ############
 ########
 ## IT-con-01 hub vnet of AD domain network controller (remote) to peer to the local vnet
@@ -150,7 +174,7 @@ data "azurerm_virtual_network" "ad_vnet_data" {
 resource "azurerm_virtual_network_peering" "peer1" {
   #name                         = "peer_avdspoke_ad"
   name                         = "peer-rpa-avdtfvnet-to-itcon1-vnethubnoeprod"
-  resource_group_name          = var.rg_name                              # rg-avd-resources
+  resource_group_name          = azurerm_resource_group.rg.name           # rg-avd-compute
   virtual_network_name         = azurerm_virtual_network.vnet.name        # avdtf-VNet  vnet fir RPA/AVD subs
   remote_virtual_network_id    = data.azurerm_virtual_network.ad_vnet_data.id   # vnet-hub-noe-prod of AD
   allow_virtual_network_access = true
@@ -158,6 +182,7 @@ resource "azurerm_virtual_network_peering" "peer1" {
   # `allow_gateway_transit` must be set to false for vnet Global Peering
   allow_gateway_transit        = false
   use_remote_gateways          = true
+  depends_on = [azurerm_resource_group.rg] 
 }
 
 # Peering the AD hub vnet to AVD network

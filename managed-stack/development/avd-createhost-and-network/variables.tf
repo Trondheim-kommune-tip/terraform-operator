@@ -116,13 +116,7 @@ variable "rg_shared_name" {
   description = "Name of the Resource group in which to deploy shared resources"
 }
 
-variable "deploy_location" {
-  type        = string
-  default     = "northeurope"
-  description = "The Azure Region in which all resources in this example should be created."
-}
-
-variable "ip_deploy_location" {
+variable "session_deploy_location" {
   type        = string
   default     = "norwayeast"
   description = "The Azure Region IPs for vm"
