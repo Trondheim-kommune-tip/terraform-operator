@@ -118,8 +118,7 @@ resource "azurerm_windows_virtual_machine" "avd_vm" {
   depends_on = [
     azurerm_resource_group.rg,
     azurerm_network_interface.avd_vm_nic,
-    azurerm_shared_image.win11,
-    azurerm_mssql_server.mssql
+    azurerm_shared_image.win11
   ]
 }
 
@@ -210,6 +209,7 @@ PROTECTED_SETTINGS
   }
 
   depends_on = [
+    azurerm_windows_virtual_machine.avd_vm,
     azurerm_virtual_network_peering.peer1,
     azurerm_virtual_network_peering.peer2
   ]
