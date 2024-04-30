@@ -33,7 +33,7 @@ resource "azurerm_public_ip" "avd_ext_ip" {
   name                    = "avd-ip-${count.index + 1}"
   location                = azurerm_resource_group.rg.location           # norwayeast
   resource_group_name     = azurerm_resource_group.rg.name
-  allocation_method       = "Static"
+  allocation_method       = "Dynamic"
   idle_timeout_in_minutes = 30
 
   tags = {
